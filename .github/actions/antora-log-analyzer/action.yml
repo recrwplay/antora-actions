@@ -1,0 +1,17 @@
+name: 'Hello World'
+description: 'Greet someone and record the time'
+inputs:
+  repo:  # id of input
+    description: 'repo name'
+    required: true
+    default: ${{ github.event.repository.name }}
+  log-file:
+    description: 'Path to Antora log file'
+    required: true
+    default: './log.json'
+outputs:
+  time: # id of output
+    description: 'The time we greeted you'
+runs:
+  using: 'node16'
+  main: 'dist/index.js'

@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build-verify": "antora --stacktrace --fetch preview.yml --log-format=json --log-file ./build/log/log.json"
+    "build-verify": "antora --stacktrace --fetch preview.yml --log-format=json --log-file ./build/log/log.json",
+    "publish-verify": "antora --stacktrace --fetch publish.yml --log-format=json --log-file ./build/log/log.json"
   },
   "keywords": [
     "antora"

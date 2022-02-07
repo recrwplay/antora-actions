@@ -11,6 +11,12 @@ content:
     - '!**/_includes/*'
     - '!**/readme.adoc'
     - '!**/README.adoc'
+  - url: https://github.com/neo4j/docs-getting-started.git
+    branches: ['4.4']
+ui:
+  bundle:
+    url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable
+    snapshot: true
 
 urls:
   html_extension_style: indexify
