@@ -50,8 +50,8 @@ jobs:
     - name: Analyze log with test action
       id: antora-log-check-test
       uses: recrwplay/antora-log-analyzer@main
-      with:
-        log-file: antora-log
+      # with:
+      #   log-file: './log.json'
     
     # - name: Install jq
     #   run: npm install jq
