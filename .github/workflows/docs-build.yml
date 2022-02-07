@@ -53,7 +53,7 @@ jobs:
     - name: Log workflow messages
       run: |
         echo "::group::Antora log messages"
-        jq -rs '.[] | (.source.worktree + "/") as $tree | ( .file.path | ltrimstr($tree) ) as $path | ( "::" + ( .level | sub("warn"; "warning") ) + " file=" + $path + ",line=1,endLine=1,title=" + $path + "::" + .msg )' ./log.json
+        jq -rs '.[] | (.source.worktree + "/") as $tree | ( .file.path | ltrimstr($tree) ) as $path | ( "::" + ( .level | sub("warn"; "warning") ) + " file=" + $path + ",title=" + $path + "::" + .msg )' ./log.json
         echo "::endgroup::"
         jq -rs 'length' ./log.json > messages.txt
         if [[ $(cat messages.txt) > 0 ]]; then exit 1; else exit 0; fi
