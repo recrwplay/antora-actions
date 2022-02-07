@@ -1,0 +1,4 @@
+# Mistakes
+
+include::not-a-file.adoc[]
+image:no-image.svg[]

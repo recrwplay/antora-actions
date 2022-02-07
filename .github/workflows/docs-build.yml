@@ -1,0 +1,59 @@
+name: Generate HTML
+
+on:
+  workflow_call:
+  workflow_dispatch:
+  push:
+    branches:
+    - main
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+
+    steps:    
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js 16
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+
+    - run: npm install --production
+    - run: npm run build-verify
+
+    - name: Upload HTML artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: docs
+        path: build/
+        retention-days: 1          
+
+    - name: Upload Log artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: antora-log
+        path: build/log
+        retention-days: 1
+
+  log-report:
+    needs: build-docs
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Download Antora log
+      uses: actions/download-artifact@v2
+      with:
+        name: antora-log
+    
+    - name: Install jq
+      run: npm install jq
+
+    - name: Log workflow messages
+      run: |
+        echo "::group::Antora log messages"
+        jq -rs '.[] | (.source.worktree + "/") as $tree | ( .file.path | ltrimstr($tree) ) as $path | ( "::" + ( .level | sub("warn"; "warning") ) + " file=" + $path + ",line=1,endLine=1,title=" + $path + "::" + .msg )' ./log.json
+        echo "::endgroup::"
+        jq -rs 'length' ./log.json > messages.txt
+        if [[ $(cat messages.txt) > 0 ]]; then exit 1; else exit 0; fi

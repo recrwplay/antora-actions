@@ -1,0 +1,16 @@
+site:
+  title: Antora Actions Test
+  url: https://example.com
+  start_page: antora-actions:ROOT:index.adoc
+
+content:
+  sources:
+  - url: https://github.com/recrwplay/antora-actions.git
+    branches: ['main']
+    exclude:
+    - '!**/_includes/*'
+    - '!**/readme.adoc'
+    - '!**/README.adoc'
+
+urls:
+  html_extension_style: indexify

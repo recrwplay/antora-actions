@@ -1,0 +1,21 @@
+site:
+  title: Antora Actions Test
+  url: https://example.com
+  start_page: antora-actions:ROOT:index.adoc
+
+content:
+  sources:
+  - url: ./
+    branches: HEAD
+    exclude:
+    - '!**/_includes/*'
+    - '!**/readme.adoc'
+    - '!**/README.adoc'
+
+ui:
+  bundle:
+    url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable
+    snapshot: true
+
+urls:
+  html_extension_style: indexify

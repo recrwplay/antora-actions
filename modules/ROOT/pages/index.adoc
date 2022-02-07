@@ -1,0 +1,9 @@
+# Antora and github actions tests
+
+Just testing workflows, actions, annotations.
+
+## Content to generate xrefs and warnings
+
+xref:no-file-here.adoc[]
+
+{no-attribute}
