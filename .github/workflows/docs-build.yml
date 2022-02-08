@@ -3,7 +3,10 @@ name: Generate HTML
 on:
   workflow_call:
     inputs:
-      failOnErrors: true
+      failOnErrors:
+        description: 'Fail on log errors (boolean)'
+        default: true
+        type: boolean
   workflow_dispatch:
   push:
     branches:
