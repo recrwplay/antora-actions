@@ -15,3 +15,5 @@ jobs:
   docs-publish:
     needs: docs-build-for-publish
     runs-on: ubuntu-latest
+    steps:
+    - run: echo "No steps"
