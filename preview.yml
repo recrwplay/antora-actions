@@ -17,5 +17,12 @@ ui:
     url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable
     snapshot: true
 
+antora:
+  extensions:
+  - require: "@neo4j-antora/antora-modify-sitemaps"
+    sitemap_version: '1.0'
+    sitemap_loc_version: 'current'
+    move_sitemaps_to_components: true    
+
 urls:
   html_extension_style: indexify
