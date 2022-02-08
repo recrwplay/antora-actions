@@ -1,0 +1,42 @@
+name: Verify HTML
+
+on:
+  workflow_call:
+    inputs:
+      failOnErrors:
+        description: 'Fail on log errors (boolean)'
+        default: true
+        type: boolean
+  workflow_dispatch:
+
+jobs:
+  log-report:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Download Antora log
+      uses: actions/download-artifact@v2
+      with:
+        name: antora-log
+
+    - name: Analyze Antora log
+      id: antora-log-check-test
+      uses: recrwplay/antora-log-analyzer@main
+      with:
+        fail-on-errors: ${{ inputs.failOnErrors }}
+      # with:
+      #   log-file: './log.json'
+
+    # If you want a quick log output, you can use jq instead, but you lose the ability to render a version of the pretty output
+    
+    # - name: Install jq
+    #   run: npm install jq
+
+    # - name: Log workflow messages
+    #   run: |
+    #     echo "::group::Antora log messages"
+    #     jq -rs '.[] | (.source.worktree + "/") as $tree | ( .file.path | ltrimstr($tree) ) as $path | ( "::" + ( .level | sub("warn"; "warning") ) + " file=" + $path + ",line=1,endLine=1,title=" + $path + "::" + .msg )' ./log.json
+    #     echo "::endgroup::"
+    #     jq -rs 'length' ./log.json > messages.txt
+    #     if [[ $(cat messages.txt) > 0 ]]; then exit 1; else exit 0; fi

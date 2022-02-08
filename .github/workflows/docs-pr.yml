@@ -7,17 +7,16 @@ on:
 
 jobs:
 
-  docs-build-for-publish:
+  docs-build-for-pr:
     uses: recrwplay/actions-demo/.github/workflows/docs-build.yml@main
-    with:
-      failOnErrors: false
 
   docs-surge:
-    needs: docs-build-for-publish
+    needs: docs-build-for-pr
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/download-artifact@v2
+    - name: Download HTML
+      uses: actions/download-artifact@v2
       with:
         name: docs
 
@@ -33,3 +32,7 @@ jobs:
       run: |
         npm install -g surge
         surge ./site recrwplay-actions-demo-${{ github.event.pull_request.number }}.surge.sh --token ${{ secrets.SURGE_TOKEN }}
+
+  docs-verify-for-pr:
+    needs: docs-build-for-pr
+    uses: recrwplay/actions-demo/.github/workflows/docs-verify.yml@main

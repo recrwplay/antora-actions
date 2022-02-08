@@ -14,8 +14,12 @@ jobs:
     with:
       failOnErrors: false
 
-  docs-publish:
+  docs-verify-for-publish:
     needs: docs-build-for-publish
+    uses: recrwplay/actions-demo/.github/workflows/docs-verify.yml@main
+
+  docs-publish:
+    needs: docs-verify-for-publish
     runs-on: ubuntu-latest
     steps:
     - run: echo "This is where we would publish to AWS"
