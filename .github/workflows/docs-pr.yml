@@ -8,7 +8,7 @@ on:
 jobs:
 
   docs-build-for-publish:
-    uses: ./.github/workflows/docs-build.yml@main
+    uses: recrwplay/actions-demo/.github/workflows/docs-build.yml@main
     with:
       failOnErrors: false
 
