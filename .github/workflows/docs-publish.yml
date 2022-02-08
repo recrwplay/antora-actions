@@ -1,0 +1,17 @@
+name: "Publish HTML"
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+    - dev
+    - main
+
+jobs:
+
+  docs-build-for-publish:
+    uses: ./.github/workflows/docs-build.yml
+
+  docs-publish:
+    needs: docs-build-for-publish
+    runs-on: ubuntu-latest
