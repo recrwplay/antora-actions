@@ -32,18 +32,3 @@ jobs:
         name: antora-log
         path: build/log
         retention-days: 1
-
-  log-report:
-    needs: build-docs
-    runs-on: ubuntu-latest
-
-    steps:
-
-    - name: Download Antora log
-      uses: actions/download-artifact@v2
-      with:
-        name: antora-log
-
-    - name: Analyze Antora log
-      id: antora-log-check-test
-      uses: recrwplay/antora-log-analyzer@main
