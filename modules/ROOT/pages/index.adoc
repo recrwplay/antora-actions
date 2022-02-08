@@ -4,8 +4,8 @@ Just testing workflows, actions, annotations.
 
 ## Content to generate xrefs and warnings
 
-xref:no-file-here.adoc[]
+include::some-imaginary-file.adoc[]
 
-{no-attribute}
+I have {no-attribute} that I can use here.
 
-Adding an error in this file for a new commit {oops}.
+include::some-other-imaginary-file.adoc[]
