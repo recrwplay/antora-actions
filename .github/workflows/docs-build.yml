@@ -2,6 +2,8 @@ name: Generate HTML
 
 on:
   workflow_call:
+    inputs:
+      failOnErrors: true
   workflow_dispatch:
   push:
     branches:
@@ -53,6 +55,8 @@ jobs:
     - name: Analyze log with test action
       id: antora-log-check-test
       uses: recrwplay/antora-log-analyzer@main
+      with:
+        fail-on-errors: ${{ inputs.failOnErrors }}
       # with:
       #   log-file: './log.json'
     
