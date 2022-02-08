@@ -7,7 +7,6 @@ on:
         description: 'Fail on log errors (boolean)'
         default: true
         type: boolean
-  workflow_dispatch:
 
 jobs:
   log-report:
