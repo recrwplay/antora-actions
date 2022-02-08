@@ -34,6 +34,7 @@ jobs:
         retention-days: 1
 
   log-report:
+    needs: build-docs
     runs-on: ubuntu-latest
 
     steps:
