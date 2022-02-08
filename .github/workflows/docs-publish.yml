@@ -11,8 +11,6 @@ jobs:
 
   docs-build-for-publish:
     uses: ./.github/workflows/docs-build.yml
-    with:
-      failOnErrors: false
 
   docs-verify-for-publish:
     needs: docs-build-for-publish
