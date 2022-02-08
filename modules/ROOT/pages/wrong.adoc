@@ -1,8 +1,0 @@
-# Mistakes
-
-include::not-a-file.adoc[]
-image:no-image.svg[]
-
-### This heading is at the wrong level
-
-and this is not {an-attribute}
