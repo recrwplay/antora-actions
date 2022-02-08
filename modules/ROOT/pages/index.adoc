@@ -7,5 +7,3 @@ Just testing workflows, actions, annotations.
 include::some-imaginary-file.adoc[]
 
 I have {no-attribute} that I can use here.
-
-include::some-other-imaginary-file.adoc[]
