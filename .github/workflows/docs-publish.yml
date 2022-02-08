@@ -18,4 +18,4 @@ jobs:
     needs: docs-build-for-publish
     runs-on: ubuntu-latest
     steps:
-    - run: echo "No steps"
+    - run: echo "This is where we would publish to AWS"

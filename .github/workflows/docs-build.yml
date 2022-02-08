@@ -52,13 +52,15 @@ jobs:
       with:
         name: antora-log
 
-    - name: Analyze log with test action
+    - name: Analyze Antora log
       id: antora-log-check-test
       uses: recrwplay/antora-log-analyzer@main
       with:
         fail-on-errors: ${{ inputs.failOnErrors }}
       # with:
       #   log-file: './log.json'
+
+    # If you want a quick log output, you can use jq instead, but you lose the ability to render a version of the pretty output
     
     # - name: Install jq
     #   run: npm install jq
