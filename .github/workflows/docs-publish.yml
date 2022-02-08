@@ -12,12 +12,12 @@ jobs:
   docs-build-for-publish:
     uses: ./.github/workflows/docs-build.yml
 
-  docs-verify-for-publish:
-    needs: docs-build-for-publish
-    uses: ./.github/workflows/docs-verify.yml
+  # docs-verify-for-publish:
+  #   needs: docs-build-for-publish
+  #   uses: ./.github/workflows/docs-verify.yml
 
   docs-publish:
-    needs: docs-verify-for-publish
+    needs: docs-build-for-publish
     runs-on: ubuntu-latest
     steps:
     - run: echo "This is where we would publish to AWS"
