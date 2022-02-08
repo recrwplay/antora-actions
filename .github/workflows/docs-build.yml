@@ -47,5 +47,3 @@ jobs:
     - name: Analyze Antora log
       id: antora-log-check-test
       uses: recrwplay/antora-log-analyzer@main
-      with:
-        fail-on-errors: ${{ inputs.failOnErrors }}
