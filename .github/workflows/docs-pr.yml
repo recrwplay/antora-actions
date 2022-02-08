@@ -1,0 +1,19 @@
+name: Verify PR
+
+on:
+  pull_request:
+    branches:
+    - main
+
+jobs:
+
+  docs-build-for-publish:
+    uses: ./.github/workflows/docs-build.yml
+    with:
+      failOnErrors: false
+
+  docs-surge:
+    needs: docs-build-for-publish
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo "This is where we deploy"
