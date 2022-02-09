@@ -1,11 +1,9 @@
 # Antora and github actions tests
-// :no-attribute: 'an attribute'
+:no-attribute: 'an attribute'
 Just testing workflows, actions, annotations.
 
 ## Content to generate xrefs and warnings
 
 include::partial$include-target.adoc[]
-
-include::partial$no-target.adoc[]
 
 I have {no-attribute} that I can use here.
