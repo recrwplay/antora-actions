@@ -7,3 +7,7 @@ Just testing workflows, actions, annotations.
 include::partial$include-target.adoc[]
 
 I have {no-attribute} that I can use here.
+
+include::partial$not-a-file.adoc[]
+
+xref:to-nowhere.adoc[]
