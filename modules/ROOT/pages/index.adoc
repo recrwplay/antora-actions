@@ -7,3 +7,6 @@ Just testing workflows, actions, annotations.
 include::partial$include-target.adoc[]
 
 I have {no-attribute} that I can use here.
+
+include::partial$include-target-incorrect-path.adoc[]
+xref:no-no.adoc[]
