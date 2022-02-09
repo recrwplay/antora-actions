@@ -1,2 +1,2 @@
 * xref:index.adoc[]
-* xref:third.adoc[]
+* xref:introduction.adoc[]

@@ -10,6 +10,9 @@ jobs:
   docs-build-for-pr:
     uses: recrwplay/actions-demo/.github/workflows/docs-build.yml@main
 
+  # For a PR build we can deploy to surge before verifying the log, because we want output either way
+  # We can block the PR from being merged, though, if all checks don't pass
+
   docs-surge:
     needs: docs-build-for-pr
     runs-on: ubuntu-latest
@@ -32,6 +35,9 @@ jobs:
       run: |
         npm install -g surge
         surge ./site recrwplay-actions-demo-${{ github.event.pull_request.number }}.surge.sh --token ${{ secrets.SURGE_TOKEN }}
+
+    # at this point we would post a comment to the PR with the deploy URL.
+    # but maybe only the first time the PR is deployed.
 
   docs-verify-for-pr:
     needs: docs-build-for-pr
