@@ -1,5 +1,5 @@
 # Antora and github actions tests
-:no-attribute: 'an attribute'
+// :no-attribute: 'an attribute'
 Just testing workflows, actions, annotations.
 
 ## Content to generate xrefs and warnings
