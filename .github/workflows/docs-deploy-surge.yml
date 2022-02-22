@@ -41,9 +41,6 @@ jobs:
         npm install -g surge
         surge ./site ${{ inputs.surge-path }}-${{ inputs.surge-id }}.surge.sh --token ${{ secrets.SURGE_TOKEN }}
 
+  
   # at this point we would post a comment to the PR with the deploy URL.
   # but maybe only the first time the PR is deployed.
-
-  docs-verify-for-pr:
-    needs: docs-build-for-pr
-    uses: recrwplay/actions-demo/.github/workflows/docs-verify.yml@main
