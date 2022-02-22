@@ -14,16 +14,12 @@ on:
     secrets:
       aws-s3-bucket: 
         required: true
-        type: string
       aws-s3-id:
         required: true
-        type: string
       aws-s3-secret:
         required: true
-        type: string
       aws-s3-region:
         required: true
-        type: string
 
 jobs:
 
