@@ -13,6 +13,9 @@ on:
         required: true
         type: string
         default: docs
+    secrets:
+      surge-token:
+        required: true
       
 jobs:
 
@@ -39,8 +42,8 @@ jobs:
     - name: Deploy documentation to surge
       run: |
         npm install -g surge
-        surge ./site ${{ inputs.surge-path }}-${{ inputs.surge-id }}.surge.sh --token ${{ secrets.SURGE_TOKEN }}
+        surge ./site ${{ inputs.surge-path }}-${{ inputs.surge-id }}.surge.sh --token ${{ secrets.surge-token }}
 
-  
+
   # at this point we would post a comment to the PR with the deploy URL.
   # but maybe only the first time the PR is deployed.
