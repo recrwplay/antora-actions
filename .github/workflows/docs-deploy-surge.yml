@@ -1,0 +1,49 @@
+name: "Deploy to surge"
+
+on:
+  workflow_call:
+    inputs:
+      surge-path:
+        required: true
+        type: string
+      surge-id:
+        required: true
+        type: string
+      docs-artifact:
+        required: true
+        type: string
+        default: docs
+      
+jobs:
+
+  # For a PR build we can deploy to surge before verifying the log, because we want output either way
+  # We can block the PR from being merged, though, if all checks don't pass
+
+  docs-surge:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Download HTML
+      uses: actions/download-artifact@v2
+      with:
+        name: ${{ inputs.docs-artifact }}
+
+    - name: List files
+      run: ls -R
+      working-directory: site
+    
+    - uses: actions/setup-node@v2
+      with:
+        node-version: lts/*
+
+    - name: Deploy documentation to surge
+      run: |
+        npm install -g surge
+        surge ./site ${{ inputs.surge-path }}-${{ inputs.surge-id }}.surge.sh --token ${{ secrets.SURGE_TOKEN }}
+
+  # at this point we would post a comment to the PR with the deploy URL.
+  # but maybe only the first time the PR is deployed.
+
+  docs-verify-for-pr:
+    needs: docs-build-for-pr
+    uses: recrwplay/actions-demo/.github/workflows/docs-verify.yml@main
