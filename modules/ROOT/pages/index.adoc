@@ -8,4 +8,4 @@ include::partial$include-target.adoc[]
 
 I have {no-attribute} that I can use here.
 
-This sentence produces a warning or an error because of this {bad-attribute}.
+This sentence produces a warning or an error because of this {attribute}.
