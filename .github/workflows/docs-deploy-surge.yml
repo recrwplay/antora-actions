@@ -1,49 +1,61 @@
 name: "Deploy to surge"
 
 on:
-  workflow_call:
-    inputs:
-      surge-path:
-        required: true
-        type: string
-      surge-id:
-        required: true
-        type: string
-      docs-artifact:
-        required: true
-        type: string
-        default: docs
-    secrets:
-      surge-token:
-        required: true
-      
+  workflow_run:
+    workflows: ["Verify PR"]
+    types:
+      - completed
+
 jobs:
+  publish-docs:
+    if: github.event.workflow_run.conclusion == 'success'
 
-  # For a PR build we can deploy to surge before verifying the log, because we want output either way
-  # We can block the PR from being merged, though, if all checks don't pass
-
-  docs-surge:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Download HTML
-      uses: actions/download-artifact@v2
-      with:
-        name: ${{ inputs.docs-artifact }}
+      - name: "Download built documentation"
+        uses: actions/github-script@v6.0.0
+        with:
+          script: |
+            var artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               run_id: ${{ github.event.workflow_run.id }},
+            });
+            var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "documentation"
+            })[0];
+            var download = await github.rest.actions.downloadArtifact({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               artifact_id: matchArtifact.id,
+               archive_format: 'zip',
+            });
+            var fs = require('fs');
+            fs.writeFileSync('${{ github.workspace }}/documentation.zip', Buffer.from(download.data));
+      
+      - run: unzip documentation.zip
+      
+      - id: get-deploy-id
+        run: |
+          deployid=$(<deployid)
+          echo "::set-output name=deploy-id::$deployid"
+      
+      - uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+      
+      - name: Deploy documentation to surge
+        run: |
+          npm install -g surge
+          surge ./site neo4j-${{ github.event.repository.name}}-${{ steps.get-deploy-id.outputs.deploy-id }}.surge.sh --token ${{ secrets.SURGE_TOKEN }}
 
-    - name: List files
-      run: ls -R
-      working-directory: site
-    
-    - uses: actions/setup-node@v2
-      with:
-        node-version: lts/*
+      # - name: Comment on PR
+      #   uses: marocchino/sticky-pull-request-comment@v2
+      #   with:
+      #     number: ${{ steps.get-deploy-id.outputs.deploy-id }}
+      #     message: |
+      #       Looks like you've updated the documentation!
 
-    - name: Deploy documentation to surge
-      run: |
-        npm install -g surge
-        surge ./site ${{ inputs.surge-path }}-${{ inputs.surge-id }}.surge.sh --token ${{ secrets.surge-token }}
-
-
-  # at this point we would post a comment to the PR with the deploy URL.
-  # but maybe only the first time the PR is deployed.
+      #       Check out your changes at https://neo4j-graphql-docs-${{ steps.get-deploy-id.outputs.deploy-id }}.surge.sh
+      #     GITHUB_TOKEN: ${{ secrets.NEO4J_DOCUMENATION_TEAM_PERSONAL_ACCESS_TOKEN }}
