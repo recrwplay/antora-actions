@@ -7,3 +7,5 @@ Just testing workflows, actions, annotations.
 include::partial$include-target.adoc[]
 
 I have {no-attribute} that I can use here.
+
+This sentence produces a warning or an error because of this {bad-attribute}.

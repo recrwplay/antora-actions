@@ -23,7 +23,7 @@ jobs:
                run_id: ${{ github.event.workflow_run.id }},
             });
             var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
-              return artifact.name == "documentation"
+              return artifact.name == "docs"
             })[0];
             var download = await github.rest.actions.downloadArtifact({
                owner: context.repo.owner,
@@ -32,9 +32,9 @@ jobs:
                archive_format: 'zip',
             });
             var fs = require('fs');
-            fs.writeFileSync('${{ github.workspace }}/documentation.zip', Buffer.from(download.data));
+            fs.writeFileSync('${{ github.workspace }}/docs.zip', Buffer.from(download.data));
       
-      - run: unzip documentation.zip
+      - run: unzip docs.zip
       
       - id: get-deploy-id
         run: |
@@ -45,7 +45,7 @@ jobs:
         with:
           node-version: lts/*
       
-      - name: Deploy documentation to surge
+      - name: Deploy docs to surge
         run: |
           npm install -g surge
           surge ./site neo4j-${{ github.event.repository.name}}-${{ steps.get-deploy-id.outputs.deploy-id }}.surge.sh --token ${{ secrets.SURGE_TOKEN }}
