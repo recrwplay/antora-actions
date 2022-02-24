@@ -18,6 +18,12 @@ on:
         description: 'The site to teardown'
         required: true
         type: string
+  workflow_dispatch:
+    inputs:
+      deploy-uri:
+        description: 'The site to teardown'
+        required: true
+        type: string
 
 
 jobs:
