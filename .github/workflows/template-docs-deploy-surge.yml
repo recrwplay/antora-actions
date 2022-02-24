@@ -1,3 +1,4 @@
+#  copy this workflow into your repo
 name: "Deploy to surge"
 
 on:

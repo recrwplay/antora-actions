@@ -1,3 +1,4 @@
+# Copy this workflow into your repo
 name: "Verify PR"
 
 on:
@@ -8,10 +9,10 @@ on:
 jobs:
 
   docs-build-for-pr:
-    uses: recrwplay/actions-demo/.github/workflows/docs-build.yml@main
+    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-build.yml@main
     with:
       deploy-id: ${{ github.event.number }}
 
   docs-verify-for-pr:
     needs: docs-build-for-pr
-    uses: recrwplay/actions-demo/.github/workflows/docs-verify.yml@main
+    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-verify.yml@main
