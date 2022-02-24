@@ -1,0 +1,57 @@
+# copy this workflow into your repo
+name: "Publish HTML"
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+    - dev
+    - master
+
+jobs:
+
+  docs-build-for-publish:
+    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-build.yml@main
+
+  docs-verify-for-publish:
+    needs: docs-build-for-publish
+    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-verify.yml@main
+
+  docs-ref:
+    runs-on: ubuntu-latest
+    outputs:
+      ref: ${{ steps.ref.outputs.ref }}
+    steps:
+    - id: ref
+      name: Set SIMPLE_REF
+      run: |
+        SIMPLE_REF=$(echo ${GITHUB_REF#refs/heads/} | tr / -)
+        [ $SIMPLE_REF = "master" ] && echo "::set-output name=ref::production" || echo "::set-output name=ref::development"
+
+
+  # the conditional on this job could even be based on the branch if that's a reliable check.
+  docs-publish-dev:
+    needs: [docs-verify-for-publish, docs-ref]
+    if: ${{ needs.docs-ref.outputs.ref == 'development' }}
+    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-publish.yml@main
+    with:
+      docs-artifact: docs
+      source-dir: site/
+    secrets:
+      aws-s3-bucket: ${{ secrets.DEVELOPMENT_AWS_CONFIG_BUCKET }}
+      aws-s3-id: ${{ secrets.DEVELOPMENT_AWS_ACCESS_KEY_ID }}
+      aws-s3-secret: ${{ secrets.DEVELOPMENT_AWS_SECRET_ACCESS_KEY }}
+      aws-s3-region: ${{ secrets.DEVELOPMENT_AWS_REGION }}
+
+  docs-publish-prod:
+    needs: [docs-verify-for-publish, docs-ref]
+    if: ${{ needs.docs-ref.outputs.ref == 'production' }}
+    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-publish.yml@main
+    with:
+      docs-artifact: docs
+      source-dir: site/
+    secrets:
+      aws-s3-bucket: ${{ secrets.PRODUCTION_AWS_CONFIG_BUCKET }}
+      aws-s3-id: ${{ secrets.PRODUCTION_AWS_ACCESS_KEY_ID }}
+      aws-s3-secret: ${{ secrets.PRODUCTION_AWS_SECRET_ACCESS_KEY }}
+      aws-s3-region: ${{ secrets.PRODUCTION_AWS_REGION }}
