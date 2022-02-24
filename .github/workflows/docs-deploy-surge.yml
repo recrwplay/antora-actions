@@ -48,7 +48,7 @@ jobs:
       - name: Deploy docs to surge
         run: |
           npm install -g surge
-          surge ./site neo4j-${{ github.event.repository.name}}-${{ steps.get-deploy-id.outputs.deploy-id }}.surge.sh --token ${{ secrets.SURGE_TOKEN }}
+          surge ./site ${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ steps.get-deploy-id.outputs.deploy-id }}.surge.sh --token ${{ secrets.SURGE_TOKEN }}
 
       # - name: Comment on PR
       #   uses: marocchino/sticky-pull-request-comment@v2
@@ -58,4 +58,4 @@ jobs:
       #       Looks like you've updated the documentation!
 
       #       Check out your changes at https://neo4j-graphql-docs-${{ steps.get-deploy-id.outputs.deploy-id }}.surge.sh
-      #     GITHUB_TOKEN: ${{ secrets.NEO4J_DOCUMENATION_TEAM_PERSONAL_ACCESS_TOKEN }}
+      #     GITHUB_TOKEN: ${{ secrets.NEO4J_DOCUMENTATION_TEAM_PERSONAL_ACCESS_TOKEN }}
