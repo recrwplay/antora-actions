@@ -8,7 +8,7 @@ on:
 jobs:
 
   docs-build-for-pr:
-    uses: recrwplay/actions-demo/.github/workflows/docs-verify.yml@main
+    uses: recrwplay/actions-demo/.github/workflows/docs-build.yml@main
     with:
       deploy-id: ${{ github.event.number }}
 
