@@ -6,6 +6,19 @@ on:
       - main
     types:
       - closed
+    inputs:
+      deploy-uri:
+        description: 'The site to teardown'
+        required: true
+        type: string
+        default: ${{ github.event.pull_request.repo.owner.login }}-${{ github.event.pull_request.repo.name }}-${{ github.event.pull_request.number }}.surge.sh
+  workflow_call:
+    inputs:
+      deploy-uri:
+        description: 'The site to teardown'
+        required: true
+        type: string
+
 
 jobs:
   teardown-docs:
@@ -18,4 +31,5 @@ jobs:
       - name: Teardown documentation
         run: |
           npm install -g surge
-          surge teardown recrwplay-actions-demo-${{ github.event.pull_request.number }}.surge.sh --token ${{ secrets.SURGE_TOKEN }}
+          surge teardown ${{ github.event.inputs.deploy-uri }} --token ${{ secrets.SURGE_TOKEN }}
+          
