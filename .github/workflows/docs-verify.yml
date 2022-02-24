@@ -24,18 +24,3 @@ jobs:
       uses: recrwplay/antora-log-analyzer@main
       with:
         fail-on-errors: ${{ inputs.failOnErrors }}
-      # with:
-      #   log-file: './log.json'
-
-    # If you want a quick log output, you can use jq instead, but you lose the ability to render a version of the pretty output
-    
-    # - name: Install jq
-    #   run: npm install jq
-
-    # - name: Log workflow messages
-    #   run: |
-    #     echo "::group::Antora log messages"
-    #     jq -rs '.[] | (.source.worktree + "/") as $tree | ( .file.path | ltrimstr($tree) ) as $path | ( "::" + ( .level | sub("warn"; "warning") ) + " file=" + $path + ",line=1,endLine=1,title=" + $path + "::" + .msg )' ./log.json
-    #     echo "::endgroup::"
-    #     jq -rs 'length' ./log.json > messages.txt
-    #     if [[ $(cat messages.txt) > 0 ]]; then exit 1; else exit 0; fi
