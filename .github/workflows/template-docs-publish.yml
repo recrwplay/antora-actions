@@ -8,14 +8,13 @@ on:
   push:
     branches:
     - dev
-    - master
 
 jobs:
 
   docs-ref:
     runs-on: ubuntu-latest
     outputs:
-      ref: ${{ steps.ref.outputs.ref }}
+      branch: ${{ steps.branch-name.outputs.branch }}
     steps:
     - id: branch-name
       name: Get branch name
