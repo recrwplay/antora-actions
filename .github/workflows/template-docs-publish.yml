@@ -37,23 +37,29 @@ jobs:
   docs-publish-dev:
     needs: docs-verify-for-publish
     if: ${{ needs.docs-get-branch.outputs.branch != 'dev' }}
-    uses: jakejarvis/s3-sync-action@master
-    with:
-      args: --acl public-read --follow-symlinks --dryrun
-    env:
-      AWS_S3_BUCKET: ${{ secrets.DEVELOPMENT_AWS_CONFIG_BUCKET }}
-      AWS_ACCESS_KEY_ID: ${{ secrets.DEVELOPMENT_AWS_ACCESS_KEY_ID }}
-      AWS_S3_SECRET: ${{ secrets.DEVELOPMENT_AWS_SECRET_ACCESS_KEY }}
-      AWS_S3_REGION: ${{ secrets.DEVELOPMENT_AWS_REGION }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Sync to development
+      uses: jakejarvis/s3-sync-action@master
+      with:
+        args: --acl public-read --follow-symlinks --dryrun
+      env:
+        AWS_S3_BUCKET: ${{ secrets.DEVELOPMENT_AWS_CONFIG_BUCKET }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.DEVELOPMENT_AWS_ACCESS_KEY_ID }}
+        AWS_S3_SECRET: ${{ secrets.DEVELOPMENT_AWS_SECRET_ACCESS_KEY }}
+        AWS_S3_REGION: ${{ secrets.DEVELOPMENT_AWS_REGION }}
 
   docs-publish-prod:
     needs: docs-verify-for-publish
     if: ${{ needs.docs-get-branch.outputs.branch == 'dev' }}
-    uses: jakejarvis/s3-sync-action@master
-    with:
-      args: --acl public-read --follow-symlinks --dryrun
-    env:
-      AWS_S3_BUCKET: ${{ secrets.PRODUCTION_AWS_CONFIG_BUCKET }}
-      AWS_ACCESS_KEY_ID: ${{ secrets.PRODUCTION_AWS_ACCESS_KEY_ID }}
-      AWS_S3_SECRET: ${{ secrets.PRODUCTION_AWS_SECRET_ACCESS_KEY }}
-      AWS_S3_REGION: ${{ secrets.PRODUCTION_AWS_REGION }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Sync to production
+      uses: jakejarvis/s3-sync-action@master
+      with:
+        args: --acl public-read --follow-symlinks --dryrun
+      env:
+        AWS_S3_BUCKET: ${{ secrets.PRODUCTION_AWS_CONFIG_BUCKET }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.PRODUCTION_AWS_ACCESS_KEY_ID }}
+        AWS_S3_SECRET: ${{ secrets.PRODUCTION_AWS_SECRET_ACCESS_KEY }}
+        AWS_S3_REGION: ${{ secrets.PRODUCTION_AWS_REGION }}
