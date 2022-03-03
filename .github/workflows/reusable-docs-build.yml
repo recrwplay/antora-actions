@@ -8,6 +8,10 @@ on:
         required: true
         type: string
         default: 'na'
+      retain-artifacts:
+        description: 'The number of days to retain artifacts'
+        required: true
+        default: 7
   workflow_dispatch:
     inputs:
       deploy-id:
@@ -15,6 +19,10 @@ on:
         required: true
         type: string
         default: 'id-'
+      retain-artifacts:
+        description: 'The number of days to retain artifacts'
+        required: true
+        default: 7
 
 
 jobs:
@@ -40,11 +48,11 @@ jobs:
       with:
         name: docs
         path: build/
-        retention-days: 1          
+        retention-days: ${{ inputs.retain-artifacts }}          
 
     - name: Upload Log artifact
       uses: actions/upload-artifact@v2
       with:
         name: antora-log
         path: build/log
-        retention-days: 1
+        retention-days: ${{ inputs.retain-artifacts }}

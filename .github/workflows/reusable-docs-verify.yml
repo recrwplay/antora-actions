@@ -5,9 +5,13 @@ on:
     inputs:
       failOnErrors:
         description: 'Fail on log errors (boolean)'
-        default: true
         type: boolean
-
+        default: true
+      failOnWarnings:
+        description: 'Fail on log warnings (boolean)'
+        type: boolean
+        default: false
+        
 jobs:
   log-report:
     runs-on: ubuntu-latest
@@ -24,3 +28,4 @@ jobs:
       uses: recrwplay/antora-log-analyzer@main
       with:
         fail-on-errors: ${{ inputs.failOnErrors }}
+        fail-on-warnings: ${{ inputs.failOnWarnings }}

@@ -1,4 +1,6 @@
-# copy this workflow into your repo
+# Use this starter workflow in your repo to publish a development or production AWS S3 bucket
+# By default it runs against the default branch and assumes the default branch publishes to production S3
+
 name: "Publish HTML"
 
 on:
@@ -10,33 +12,33 @@ on:
 
 jobs:
 
-  docs-build-for-publish:
-    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-build.yml@main
-
-  docs-verify-for-publish:
-    needs: docs-build-for-publish
-    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-verify.yml@main
-
   docs-ref:
     runs-on: ubuntu-latest
     outputs:
       ref: ${{ steps.ref.outputs.ref }}
     steps:
-    - id: ref
-      name: Set SIMPLE_REF
-      run: |
-        SIMPLE_REF=$(echo ${GITHUB_REF#refs/heads/} | tr / -)
-        [ $SIMPLE_REF = "master" ] && echo "::set-output name=ref::production" || echo "::set-output name=ref::development"
+    - id: branch-name
+      name: Get branch name
+      run: echo "::set-output name=branch::$(echo ${GITHUB_REF#refs/heads/} | tr / -)"
 
+  docs-build-for-publish:
+    needs: docs-ref
+    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-build.yml@main
+    with:
+      deploy-id: ${{ needs.docs-ref.outputs.branch }}
 
-  # the conditional on this job could even be based on the branch if that's a reliable check.
+  docs-verify-for-publish:
+    needs: docs-build-for-publish
+    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-verify.yml@main
+
   docs-publish-dev:
-    needs: [docs-verify-for-publish, docs-ref]
-    if: ${{ needs.docs-ref.outputs.ref == 'development' }}
+    needs: docs-verify-for-publish
+    if: ${{ needs.docs-ref.outputs.branch == 'dev' }}
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-publish.yml@main
     with:
       docs-artifact: docs
       source-dir: site/
+      extra-args: --dryrun
     secrets:
       aws-s3-bucket: ${{ secrets.DEVELOPMENT_AWS_CONFIG_BUCKET }}
       aws-s3-id: ${{ secrets.DEVELOPMENT_AWS_ACCESS_KEY_ID }}
@@ -44,12 +46,13 @@ jobs:
       aws-s3-region: ${{ secrets.DEVELOPMENT_AWS_REGION }}
 
   docs-publish-prod:
-    needs: [docs-verify-for-publish, docs-ref]
-    if: ${{ needs.docs-ref.outputs.ref == 'production' }}
+    needs: docs-verify-for-publish
+    if: ${{ needs.docs-ref.outputs.branch != 'master' }}
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-publish.yml@main
     with:
       docs-artifact: docs
       source-dir: site/
+      extra-args: --dryrun
     secrets:
       aws-s3-bucket: ${{ secrets.PRODUCTION_AWS_CONFIG_BUCKET }}
       aws-s3-id: ${{ secrets.PRODUCTION_AWS_ACCESS_KEY_ID }}

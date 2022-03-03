@@ -11,6 +11,10 @@ on:
         required: true
         type: string
         default: docs
+      extra-args:
+        required: true
+        type: string
+        default: --dryrun
     secrets:
       aws-s3-bucket: 
         required: true
@@ -31,17 +35,11 @@ jobs:
       with:
         name: ${{ inputs.docs-artifact }}
 
-    # - name: List files
-    #   run: ls -R
-    #   working-directory: ${{ inputs.source-dir }}
 
-
-    # Sync all files to S3
-    # Note: --dryrun means it doesn't actually sync anything right now
     - name: Sync to S3
       uses: jakejarvis/s3-sync-action@master
       with:
-        args: --acl public-read --follow-symlinks --dryrun
+        args: --acl public-read --follow-symlinks ${{ inputs.extra-args }}
       env:
         AWS_S3_BUCKET: ${{ secrets.aws-s3-bucket }}
         AWS_ACCESS_KEY_ID: ${{ secrets.aws-s3-id }}
