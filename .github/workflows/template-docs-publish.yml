@@ -26,7 +26,6 @@ jobs:
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-build.yml@main
     with:
       deploy-id: ${{ needs.docs-ref.outputs.branch }}
-      retain-artifacts: 7
 
   docs-verify-for-publish:
     needs: docs-build-for-publish
