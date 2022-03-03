@@ -33,7 +33,7 @@ jobs:
 
   docs-publish-dev:
     needs: docs-verify-for-publish
-    if: ${{ needs.docs-ref.outputs.branch == 'main' }}
+    if: ${{ needs.docs-ref.outputs.branch != 'main' }}
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-publish.yml@main
     with:
       docs-artifact: docs
@@ -47,7 +47,7 @@ jobs:
 
   docs-publish-prod:
     needs: docs-verify-for-publish
-    if: ${{ needs.docs-ref.outputs.branch != 'main' }}
+    if: ${{ needs.docs-ref.outputs.branch == 'main' }}
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-publish.yml@main
     with:
       docs-artifact: docs
