@@ -1,5 +1,8 @@
 # Use this starter workflow in your repo to publish a development or production AWS S3 bucket
 # By default it runs against the default branch and assumes the default branch publishes to production S3
+# You can change this by adding branches, and specifying a different branch in the publish 'if' statements
+# sync-args are passed to the aws s3 action
+# --dryrun is included to prevent accidental publishing - remove this when you are ready to publish
 
 name: "Publish HTML"
 
@@ -11,7 +14,7 @@ on:
 
 jobs:
 
-  docs-ref:
+  docs-get-branch:
     runs-on: ubuntu-latest
     outputs:
       branch: ${{ steps.branch-name.outputs.branch }}
@@ -21,10 +24,10 @@ jobs:
       run: echo "::set-output name=branch::$(echo ${GITHUB_REF#refs/heads/} | tr / -)"
 
   docs-build-for-publish:
-    needs: docs-ref
+    needs: docs-get-branch
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-build.yml@main
     with:
-      deploy-id: ${{ needs.docs-ref.outputs.branch }}
+      deploy-id: ${{ needs.docs-get-branch.outputs.branch }}
       retain-artifacts: 28
 
   docs-verify-for-publish:
@@ -33,28 +36,24 @@ jobs:
 
   docs-publish-dev:
     needs: docs-verify-for-publish
-    if: ${{ needs.docs-ref.outputs.branch != 'main' }}
-    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-publish.yml@main
+    if: ${{ needs.docs-get-branch.outputs.branch != 'dev' }}
+    uses: jakejarvis/s3-sync-action@master
     with:
-      docs-artifact: docs
-      source-dir: site/
-      extra-args: --dryrun
-    secrets:
-      aws-s3-bucket: ${{ secrets.DEVELOPMENT_AWS_CONFIG_BUCKET }}
-      aws-s3-id: ${{ secrets.DEVELOPMENT_AWS_ACCESS_KEY_ID }}
-      aws-s3-secret: ${{ secrets.DEVELOPMENT_AWS_SECRET_ACCESS_KEY }}
-      aws-s3-region: ${{ secrets.DEVELOPMENT_AWS_REGION }}
+      args: --acl public-read --follow-symlinks --dryrun
+    env:
+      AWS_S3_BUCKET: ${{ secrets.DEVELOPMENT_AWS_CONFIG_BUCKET }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.DEVELOPMENT_AWS_ACCESS_KEY_ID }}
+      AWS_S3_SECRET: ${{ secrets.DEVELOPMENT_AWS_SECRET_ACCESS_KEY }}
+      AWS_S3_REGION: ${{ secrets.DEVELOPMENT_AWS_REGION }}
 
   docs-publish-prod:
     needs: docs-verify-for-publish
-    if: ${{ needs.docs-ref.outputs.branch == 'main' }}
-    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-publish.yml@main
+    if: ${{ needs.docs-get-branch.outputs.branch == 'dev' }}
+    uses: jakejarvis/s3-sync-action@master
     with:
-      docs-artifact: docs
-      source-dir: site/
-      extra-args: --dryrun
-    secrets:
-      aws-s3-bucket: ${{ secrets.PRODUCTION_AWS_CONFIG_BUCKET }}
-      aws-s3-id: ${{ secrets.PRODUCTION_AWS_ACCESS_KEY_ID }}
-      aws-s3-secret: ${{ secrets.PRODUCTION_AWS_SECRET_ACCESS_KEY }}
-      aws-s3-region: ${{ secrets.PRODUCTION_AWS_REGION }}
+      args: --acl public-read --follow-symlinks --dryrun
+    env:
+      AWS_S3_BUCKET: ${{ secrets.PRODUCTION_AWS_CONFIG_BUCKET }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.PRODUCTION_AWS_ACCESS_KEY_ID }}
+      AWS_S3_SECRET: ${{ secrets.PRODUCTION_AWS_SECRET_ACCESS_KEY }}
+      AWS_S3_REGION: ${{ secrets.PRODUCTION_AWS_REGION }}
