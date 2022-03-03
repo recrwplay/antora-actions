@@ -1,9 +1,4 @@
-# Use this starter workflow in your repo to publish a development or production AWS S3 bucket
-# By default it runs against the default branch and assumes the default branch publishes to production S3
-# You can change this by adding branches, and specifying a different branch in the publish 'if' statements
-# sync-args are passed to the aws s3 action
-# --dryrun is included to prevent accidental publishing - remove this when you are ready to publish
-
+# This is an example of the docs-publish-dev-prod.yml workflow available from the recrwplay org
 name: "Publish HTML"
 
 on:

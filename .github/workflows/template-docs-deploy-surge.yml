@@ -1,4 +1,4 @@
-#  copy this workflow into your repo
+# This is an example of the docs-deploy-surge.yml workflow available from the recrwplay org
 name: "Deploy to surge"
 
 on:

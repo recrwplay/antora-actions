@@ -1,4 +1,4 @@
-#  copy this workflow into your repo
+# This is an example of the docs-teardown.yml workflow available from the recrwplay org
 name: "Documentation Teardown"
 
 on:
