@@ -39,7 +39,7 @@ jobs:
       with:
         node-version: '16'
 
-    - run: npm install --production
+    - run: npm install --omit=dev
     - run: npm run build-verify
 
     - name: Save event-id
