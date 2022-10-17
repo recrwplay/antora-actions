@@ -42,7 +42,7 @@ jobs:
           deployid=$(<deployid)
           echo "::set-output name=deploy-id::$deployid"
       
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: lts/*
       
