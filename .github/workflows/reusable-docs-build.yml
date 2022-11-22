@@ -5,7 +5,6 @@ on:
     inputs:
       package-script:
         description: 'The name of the script to run in package.json '
-        required: true
         type: string
         default: 'build-verify'
       deploy-id:
