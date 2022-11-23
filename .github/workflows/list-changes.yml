@@ -28,6 +28,8 @@ jobs:
     needs: set-outputs
     runs-on: ubuntu-latest
     steps:
+      - name: Check out default branch
+        uses: actions/checkout@v3
       - name: gh test
         run: gh pr status --json author --jq '.[]' | npx pino-pretty
         env:
