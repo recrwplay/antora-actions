@@ -33,7 +33,7 @@ jobs:
 
       - id: get-deploy-url
         run: |
-          deployurl = ${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ steps.get-deploy-id.outputs.deploy-id }}.surge.sh
+          deployurl=${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ steps.get-deploy-id.outputs.deploy-id }}.surge.sh
           echo "deploy-url = $deployurl >> $GITHUB_OUTPUT
       
   publish-docs:
