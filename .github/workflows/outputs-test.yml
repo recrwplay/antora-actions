@@ -66,8 +66,8 @@ jobs:
   show-changes:
     needs: set-outputs
     runs-on: ubuntu-latest
-      steps:
-        - name: Get links to updated files
-          run: |
-            gh pr view ${{ github.event.workflow_run.id }}  --json files --jq 'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes |  (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "${{ needs.set-outputs.get-deploy-url.deploy-url }}/\(.f)" ) ) ) ' | npx pino-pretty
+    steps:
+      - name: Get links to updated files
+        run: |
+          gh pr view ${{ github.event.workflow_run.id }}  --json files --jq 'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes |  (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "${{ needs.set-outputs.get-deploy-url.deploy-url }}/\(.f)" ) ) ) ' | npx pino-pretty
 
