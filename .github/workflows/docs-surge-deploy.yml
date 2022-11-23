@@ -29,12 +29,12 @@ jobs:
       - id: get-deploy-id
         run: |
           deployid=555
-          echo "deploy-id = $deployid >> $GITHUB_OUTPUT"
+          echo "deploy-id=$deployid >> $GITHUB_OUTPUT"
 
       - id: get-deploy-url
         run: |
           deployurl=${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ steps.get-deploy-id.outputs.deploy-id }}.surge.sh
-          echo "deploy-url = $deployurl >> $GITHUB_OUTPUT"
+          echo "deploy-url=$deployurl >> $GITHUB_OUTPUT"
       
   publish-docs:
     needs: set-outputs
