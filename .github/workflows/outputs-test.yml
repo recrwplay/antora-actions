@@ -23,9 +23,47 @@ jobs:
         run: |
           deployurl=${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ steps.get-deploy-id.outputs.deploy-id }}.surge.sh
           echo "deploy-url=$deployurl" >> $GITHUB_OUTPUT
+publish-docs:
+    needs: set-outputs
+    # if: github.event.workflow_run.conclusion == 'success'
+
+    runs-on: ubuntu-latest
+
+    steps:
+#       - name: "Download built documentation"
+#         uses: actions/github-script@v6.0.0
+#         with:
+#           script: |
+#             var artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+#                owner: context.repo.owner,
+#                repo: context.repo.repo,
+#                run_id: ${{ github.event.workflow_run.id }},
+#             });
+#             var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
+#               return artifact.name == "docs"
+#             })[0];
+#             var download = await github.rest.actions.downloadArtifact({
+#                owner: context.repo.owner,
+#                repo: context.repo.repo,
+#                artifact_id: matchArtifact.id,
+#                archive_format: 'zip',
+#             });
+#             var fs = require('fs');
+#             fs.writeFileSync('${{ github.workspace }}/docs.zip', Buffer.from(download.data));
       
-      - name: Set color
-        id: random-color-generator
-        run: echo "SELECTED_COLOR=green" >> $GITHUB_OUTPUT
-      - name: Get color
-        run: echo "The selected color is ${{ steps.random-color-generator.outputs.SELECTED_COLOR }}"
+#       - run: unzip docs.zip
+      
+ 
+      - uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+
+#       - name: Deploy docs to surge
+#         run: |
+#           npm install -g surge
+#           surge ./site ${{ needs.set-outputs.get-deploy-url.deploy-url }} --token ${{ secrets.SURGE_TOKEN }}
+
+      - name: Get links to updated files
+        run: |
+          gh pr view ${{ github.event.workflow_run.id }}  --json files --jq 'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes |  (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "${{ needs.set-outputs.get-deploy-url.deploy-url }}/\(.f)" ) ) ) ' | npx pino-pretty
+
