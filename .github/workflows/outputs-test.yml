@@ -38,7 +38,7 @@ jobs:
           
       - name: add comment
         run: |
-          gh pr comment 13 --body-file changelog --edit-last
+          gh pr comment 13 --body-file changelog
         env:
           GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
       
