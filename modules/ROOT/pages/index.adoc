@@ -12,8 +12,3 @@ This sentence produces a warning or an error because of this {bad-attribute}.
 
 The next xref produces an error: xref:wrong-filename.adoc[]
 
-The next include is also bad.
-
-include::partial$incorrect-target.adoc[]
-
-// test
