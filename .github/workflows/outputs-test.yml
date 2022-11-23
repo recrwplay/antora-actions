@@ -1,0 +1,30 @@
+name: "Test outputs"
+
+on:
+  workflow_dispatch:
+
+
+
+jobs:
+  set-outputs:
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      deploy-id: ${{ steps.get-deploy-id.outputs.deploy-id }}
+      deploy-url: ${{ steps.get-deploy-url.outputs.deploy-url }}
+    steps:
+
+      - id: get-deploy-id
+        run: |
+          deployid=555
+          echo "deploy-id=$deployid >> $GITHUB_OUTPUT
+
+      - id: get-deploy-url
+        run: |
+          deployurl = ${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ steps.get-deploy-id.outputs.deploy-id }}.surge.sh
+      
+      - name: Set color
+        id: random-color-generator
+        run: echo "SELECTED_COLOR=green" >> $GITHUB_OUTPUT
+      - name: Get color
+        run: echo "The selected color is ${{ steps.random-color-generator.outputs.SELECTED_COLOR }}"
