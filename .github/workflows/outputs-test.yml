@@ -23,7 +23,7 @@ jobs:
         run: |
           deployurl=${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ steps.get-deploy-id.outputs.deploy-id }}.surge.sh
           echo "deploy-url=$deployurl" >> $GITHUB_OUTPUT
-publish-docs:
+  publish-docs:
     needs: set-outputs
     # if: github.event.workflow_run.conclusion == 'success'
 
@@ -54,16 +54,20 @@ publish-docs:
 #       - run: unzip docs.zip
       
  
-      - uses: actions/setup-node@v3
-        with:
-          node-version: lts/*
+#       - uses: actions/setup-node@v3
+#         with:
+#           node-version: lts/*
 
 #       - name: Deploy docs to surge
 #         run: |
 #           npm install -g surge
 #           surge ./site ${{ needs.set-outputs.get-deploy-url.deploy-url }} --token ${{ secrets.SURGE_TOKEN }}
 
-      - name: Get links to updated files
-        run: |
-          gh pr view ${{ github.event.workflow_run.id }}  --json files --jq 'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes |  (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "${{ needs.set-outputs.get-deploy-url.deploy-url }}/\(.f)" ) ) ) ' | npx pino-pretty
+  show-changes:
+    needs: set-outputs
+    runs-on: ubuntu-latest
+      steps:
+        - name: Get links to updated files
+          run: |
+            gh pr view ${{ github.event.workflow_run.id }}  --json files --jq 'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes |  (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "${{ needs.set-outputs.get-deploy-url.deploy-url }}/\(.f)" ) ) ) ' | npx pino-pretty
 
