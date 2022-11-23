@@ -3,6 +3,10 @@ name: Generate HTML
 on:
   workflow_call:
     inputs:
+      package-script:
+        description: 'The name of the script to run in package.json '
+        type: string
+        default: 'build-verify'
       deploy-id:
         description: 'The PR number if workflow called by a PR'
         required: true
@@ -15,6 +19,11 @@ on:
         default: 7
   workflow_dispatch:
     inputs:
+      package-script:
+        description: 'The name of the script to run in package.json '
+        required: true
+        type: string
+        default: 'build-verify'
       deploy-id:
         description: 'An id if the output is to be deployed'
         required: true
@@ -32,28 +41,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:    
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Use Node.js 16
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: '16'
 
-    - run: npm install --production
-    - run: npm run build-verify
+    - run: npm install --omit=dev
+    - run: npm run ${{ inputs.package-script }}
 
     - name: Save event-id
       run: echo ${{ inputs.deploy-id }} > ./build/deployid
 
     - name: Upload HTML artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: docs
         path: build/
         retention-days: ${{ inputs.retain-artifacts }}          
 
     - name: Upload Log artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: antora-log
         path: build/log

@@ -1,0 +1,42 @@
+name: "Test outputs"
+
+on:
+  workflow_dispatch:
+
+
+
+jobs:
+  set-outputs:
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      deploy-id: ${{ steps.get-deploy-id.outputs.deploy-id }}
+      deploy-url: ${{ steps.get-deploy-url.outputs.deploy-url }}
+    steps:
+
+      - id: get-deploy-id
+        run: |
+          deployid=555
+          echo "deploy-id=$deployid" >> $GITHUB_OUTPUT
+
+      - id: get-deploy-url
+        run: |
+          deployurl=${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ steps.get-deploy-id.outputs.deploy-id }}.surge.sh
+          echo "deploy-url=$deployurl" >> $GITHUB_OUTPUT
+  show-changes:
+    needs: set-outputs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Get links to updated files
+        id: list-changes
+        run: |
+          changes=$(gh pr view 13 --json files --jq 'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes |  (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "${{ needs.set-outputs.get-deploy-url.deploy-url }}/\(.f)" ) ) ) ' | npx pino-pretty)
+          echo "changes=$changes" >> $GITHUB_OUTPUT
+        env:
+          GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
+      - name: Add comment
+        run: |
+          echo "Changes:"
+          echo ${{ steps.list-changes.outputs.changes }}
