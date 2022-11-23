@@ -28,7 +28,7 @@ jobs:
 
       - id: get-deploy-id
         run: |
-          deployid=$(<deployid)
+          deployid=555
           echo "deploy-id = $deployid >> $GITHUB_OUTPUT
 
       - id: get-deploy-url
