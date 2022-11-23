@@ -30,8 +30,12 @@ jobs:
     steps:
       - name: gh test
         run: gh pr status --json author --jq '.[]' | npx pino-pretty
+        env:
+          GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
       - name: pr list test
         run: gh pr view ${{ github.event.number }} --json files --jq 'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes |  (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "${{ needs.set-outputs.get-deploy-url.outputs.deploy-url }}/\(.f)" ) ) ) ' | npx pino-pretty
+        env:
+          GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
       - name: Get links to updated files
         id: list-changes
         run: |
