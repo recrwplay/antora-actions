@@ -32,21 +32,27 @@ jobs:
         
       - name: show output direct
         run: |
-          gh pr view 13 --json files --jq 'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes |  (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "${{ needs.set-outputs.get-deploy-url.deploy-url }}/\(.f)" ) ) ) ' | npx pino-pretty
+          gh pr view 13 --json files --jq 'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes |  (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "${{ needs.set-outputs.get-deploy-url.deploy-url }}/\(.f)" ) ) ) ' | npx pino-pretty > changelog
+        env:
+          GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
+          
+      - name: add comment
+        run: |
+          gh pr comment 13 --body --body-file changelog
         env:
           GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
       
-      - name: Get links to updated files
-        id: list-changes
-        run: |
-          changes=$(gh pr view 13 --json files --jq 'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes |  (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "${{ needs.set-outputs.get-deploy-url.deploy-url }}/\(.f)" ) ) ) ' | npx pino-pretty)
-          changes="${changes//'%'/'%25'}"
-          changes="${changes//$'\n'/'%0A'}"
-          changes="${changes//$'\r'/'%0D'}"
-          echo "changes=$changes" >> $GITHUB_OUTPUT
-        env:
-          GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
-      - name: Add comment
-        run: |
-          echo "Changes:"
-          echo ${{ steps.list-changes.outputs.changes }}
+#       - name: Get links to updated files
+#         id: list-changes
+#         run: |
+#           changes=$(gh pr view 13 --json files --jq 'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes |  (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "${{ needs.set-outputs.get-deploy-url.deploy-url }}/\(.f)" ) ) ) ' | npx pino-pretty)
+#           changes="${changes//'%'/'%25'}"
+#           changes="${changes//$'\n'/'%0A'}"
+#           changes="${changes//$'\r'/'%0D'}"
+#           echo "changes=$changes" >> $GITHUB_OUTPUT
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
+#       - name: Add comment
+#         run: |
+#           echo "Changes:"
+#           echo ${{ steps.list-changes.outputs.changes }}
