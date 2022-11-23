@@ -15,5 +15,3 @@ The next xref produces an error: xref:wrong-filename.adoc[]
 The next include is also bad.
 
 include::partial$incorrect-target.adoc[]
-
-Text to force workflow
