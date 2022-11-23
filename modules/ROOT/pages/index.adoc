@@ -16,4 +16,4 @@ The next include is also bad.
 
 include::partial$incorrect-target.adoc[]
 
-// test
+// testing
