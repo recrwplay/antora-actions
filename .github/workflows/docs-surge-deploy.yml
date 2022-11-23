@@ -101,7 +101,7 @@ jobs:
       - name: Get links to updated files
         id: list-changes
         run: |
-          changes=$(gh pr view ${{ github.event.workflow_run.id }} --json files --jq 'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes |  (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "${{ needs.set-outputs.get-deploy-url.deploy-url }}/\(.f)" ) ) ) ' | npx pino-pretty)
+          changes=$(gh pr view ${{ needs.set-outputs.get-deploy-id.outputs.deploy-id }} --json files --jq 'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes |  (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "${{ needs.set-outputs.get-deploy-url.outputs.deploy-url }}/\(.f)" ) ) ) ' | npx pino-pretty)
           echo "changes=$changes" >> $GITHUB_OUTPUT
         env:
           GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
