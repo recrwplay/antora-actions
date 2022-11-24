@@ -51,15 +51,11 @@ jobs:
       - name: Save changelog to file
         run: |
           gh pr view 13 --json files --jq \
-          'limit(10; .files.[] \
-          | select(.path | contains("/pages/")) as $changes \
-          |  (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "http://${{ needs.set-outputs.outputs.deploy-url }}/${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}/\(.f)" ) ) ) ' \
+          'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes |  (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "http://${{ needs.set-outputs.outputs.deploy-url }}/${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}/\(.f)" ) ) ) ' \
           | npx pino-pretty > changelog
         env:
           GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
-          
-
-          
+                    
       - name: add changelog comment
         run: |
           gh pr comment 13 --body-file changelog --edit-last
