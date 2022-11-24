@@ -22,7 +22,8 @@ jobs:
       - id: get-deploy-url
         run: |
           deployurl=${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ steps.get-deploy-id.outputs.deploy-id }}.surge.sh
-          echo "deploy-url=$deployurl" >> $GITHUB_OUTPUT
+          echo "deploy-url=$deployurl" >> $GITHUB_OUTPUT      
+        
   show-changes:
     needs: set-outputs
     runs-on: ubuntu-latest
@@ -32,9 +33,32 @@ jobs:
         
       - name: show output direct
         run: |
-          gh pr view 13 --json files --jq 'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes |  (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "${{ needs.set-outputs.outputs.deploy-url }}/\(.f)" ) ) ) ' | npx pino-pretty > changelog
+          gh pr view 13 --json files --jq \
+          'limit(10; .files.[] \
+          | select(.path | contains("/pages/")) as $changes 
+          |  (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "http://${{ needs.set-outputs.outputs.deploy-url }}/\(.f)" ) ) ) ' \
+          | npx pino-pretty > changelog
         env:
           GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
+          
+      - name: Read antora component name
+        id: antora-component-name
+        uses: jbutcher5/read-yaml@main      # You may wish to replace main with a version tag such as '1.6' etc.
+        with:
+          file: './antora.yml'          # File to read from
+          key-path: '["name"]' # Access the runs key then the using key and retuns the value.
+          
+      - name: Read antora component version
+        id: antora-component-version
+        uses: jbutcher5/read-yaml@main      # You may wish to replace main with a version tag such as '1.6' etc.
+        with:
+          file: './antora.yml'          # File to read from
+          key-path: '["version"]' # Access the runs key then the using key and retuns the value.
+
+
+      - name: Display read-yaml output
+        run: echo "${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}"
+
           
       - name: add comment
         run: |
