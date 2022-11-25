@@ -81,8 +81,15 @@ jobs:
 
   add-comment:
     runs-on: ubuntu-latest
-    needs: setup
+    needs: setup-and-deploy
     steps:
+
+      - name: Add changelog comment
+        run: |
+          gh pr comment  ${{ needs.setup-and-deploy.outputs.deploy-id }} --body-file changelog
+        env:
+          GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
+          
       - name: Comment on PR (sticky)
         uses: marocchino/sticky-pull-request-comment@v2
         with:
@@ -91,10 +98,5 @@ jobs:
           message: ${{ needs.setup-and-deploy.get-changelog.outputs.changelog }}
           GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
 
-      - name: Add changelog comment
-        run: |
-          gh pr comment  ${{ needs.setup-and-deploy.outputs.deploy-id }} --body-file changelog
-        env:
-          GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
           
 
