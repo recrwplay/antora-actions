@@ -59,7 +59,7 @@ jobs:
         run: |
           gh pr view 13 --json files --jq \
           'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes |  (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "http://${{ needs.set-outputs.outputs.deploy-url }}/${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}/\(.f)" ) ) ) ' \
-          | npx pino-pretty > changelog
+          | npx pino-pretty > ./build/changelog
         env:
           GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
 
