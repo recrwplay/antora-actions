@@ -7,14 +7,3 @@ Just testing workflows, actions, annotations.
 include::partial$include-target.adoc[]
 
 I have {an-attribute} that I can use here.
-
-This sentence produces a warning or an error because of this {bad-attribute}.
-
-
-The next xref produces an error: xref:wrong-filename.adoc[]
-
-This branch contains a change to test inputs when building from a PR.
-
-// yes
-
-// maybe
