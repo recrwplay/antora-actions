@@ -19,13 +19,19 @@ on:
 
 jobs:
       
-  get-docs:
+  setup:
 #     if: github.event.workflow_run.conclusion == 'success'
 
     runs-on: ubuntu-latest
 
+    outputs:
+      changelog: ${{ steps.get-changelog.outputs.changelog }}
+      deploy-id: ${{ steps.get-deploy-id.outputs.deploy-id }}
+      deploy-url: ${{ steps.get-deploy-url.outputs.deploy-url }}
+
     steps:
       - name: "Download built documentation"
+        id: get-docs
         uses: actions/github-script@v6.0.0
         with:
           script: |
@@ -48,15 +54,6 @@ jobs:
       
       - run: unzip docs.zip
       
-  set-outputs:
-    runs-on: ubuntu-latest
-    # Map a step output to a job output
-    outputs:
-      changelog: ${{ steps.get-changelog.outputs.changelog }}
-      deploy-id: ${{ steps.get-deploy-id.outputs.deploy-id }}
-      deploy-url: ${{ steps.get-deploy-url.outputs.deploy-url }}
-    steps:
-    
       - id: get-changelog
         run: |
           changelog = $(<changelog)
@@ -71,11 +68,10 @@ jobs:
         run: |
           deployurl=${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ steps.get-deploy-id.outputs.deploy-id }}.surge.sh
           echo "deploy-url=$deployurl" >> $GITHUB_OUTPUT
-      
-  
+          
   deploy-docs:
     runs-on: ubuntu-latest
-    needs: set-outputs
+    needs: setup
     steps:
       - uses: actions/setup-node@v3
         with:
@@ -84,7 +80,7 @@ jobs:
       - name: Deploy docs to surge
         run: |
           npm install -g surge
-          surge ./site ${{ needs.set-outputs.get-deploy-url.deploy-url }} --token ${{ secrets.SURGE_TOKEN }}
+          surge ./site ${{ needs.setup.get-deploy-url.deploy-url }} --token ${{ secrets.SURGE_TOKEN }}
           
 #       - name: Save changelog to file
 #         run: |
@@ -96,19 +92,19 @@ jobs:
 
   add-comment:
     runs-on: ubuntu-latest
-    needs: set-outputs
+    needs: setup
     steps:
       - name: Comment on PR
         uses: marocchino/sticky-pull-request-comment@v2
         with:
-          number: ${{ needs.set-outputs.get-deploy-id.outputs.deploy-id }}
+          number: ${{ needs.setup.get-deploy-id.outputs.deploy-id }}
           changes: 'a list of files'
           message: |
             Looks like you've updated the documentation!
 
-            Check out your changes at ${{ needs.set-outputs.get-deploy-url.deploy-url }}
+            Check out your changes at ${{ needs.setup.get-deploy-url.deploy-url }}
             
-            ${{ needs.set-outputs.get-changelog.changelog }}
+            ${{ needs.setup.get-changelog.changelog }}
             
             
 
