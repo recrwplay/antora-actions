@@ -82,13 +82,13 @@ jobs:
           deployurl=${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ steps.get-deploy-id.outputs.deploy-id }}.surge.sh
           surge ./site $deployurl --token ${{ secrets.SURGE_TOKEN }}
           
-      - name: Comment on PR (sticky)
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          number: ${{ steps.get-deploy-id.outputs.deploy-id }}
-          path: changelog
-          recreate: true
-          GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
+      # - name: Comment on PR (sticky)
+      #   uses: marocchino/sticky-pull-request-comment@v2
+      #   with:
+      #     number: ${{ steps.get-deploy-id.outputs.deploy-id }}
+      #     path: changelog
+      #     recreate: true
+      #     GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
 
       - name: Add changelog comment
         run: |
