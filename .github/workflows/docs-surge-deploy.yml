@@ -56,7 +56,7 @@ jobs:
       
       - id: get-changelog
         run: |
-          changelog = $(<changelog)
+          changelog=$(<changelog)
           echo "changelog=$changelog" >> $GITHUB_OUTPUT
 
       - id: get-deploy-id
