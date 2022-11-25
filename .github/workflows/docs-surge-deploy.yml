@@ -22,15 +22,15 @@ jobs:
     runs-on: ubuntu-latest
     # Map a step output to a job output
     outputs:
-      changelog: ${{ steps.get-changelog.outputs.changelog }}
+#       changelog: ${{ steps.get-changelog.outputs.changelog }}
       deploy-id: ${{ steps.get-deploy-id.outputs.deploy-id }}
       deploy-url: ${{ steps.get-deploy-url.outputs.deploy-url }}
     steps:
     
-      - id: get-changelog
-        run: |
-          changelog = $(<changelog)
-          echo "changelog=$changelog" >> $GITHUB_OUTPUT
+#       - id: get-changelog
+#         run: |
+#           changelog = $(<changelog)
+#           echo "changelog=$changelog" >> $GITHUB_OUTPUT
 
       - id: get-deploy-id
         run: |
@@ -81,6 +81,14 @@ jobs:
         run: |
           npm install -g surge
           surge ./site ${{ needs.set-outputs.get-deploy-url.deploy-url }} --token ${{ secrets.SURGE_TOKEN }}
+          
+      - name: Save changelog to file
+        run: |
+          gh pr view ${{ github.event.workflow_run.id }} --json files --jq \
+          'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes |  (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "http://${{ needs.set-outputs.outputs.deploy-url }}/${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}/\(.f)" ) ) ) ' \
+          | npx pino-pretty
+        env:
+          GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
 
       - name: Comment on PR
         uses: marocchino/sticky-pull-request-comment@v2
@@ -91,10 +99,6 @@ jobs:
             Looks like you've updated the documentation!
 
             Check out your changes at ${{ needs.set-outputs.get-deploy-url.deploy-url }}
-
-            Changes:
-            
-            ${{ needs.set-outputs.get-changelog.changelog }}
 
           GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
           
