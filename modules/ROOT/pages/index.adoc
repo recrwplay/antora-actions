@@ -9,3 +9,5 @@ include::partial$include-target.adoc[]
 I have {an-attribute} that I can use here.
 
 // test
+
+// new
