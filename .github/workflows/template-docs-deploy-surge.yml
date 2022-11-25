@@ -3,7 +3,7 @@ name: "Deploy to surge"
 
 on:
   workflow_run:
-    workflows: ["Verify PR"]
+    workflows: ["Verify PR old"]
     types:
       - completed
 
