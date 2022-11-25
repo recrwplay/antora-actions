@@ -91,6 +91,7 @@ jobs:
         with:
           number: ${{ steps.get-deploy-id.outputs.deploy-id }}
           path: changelog
+          recreate: true
           GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
 
           
