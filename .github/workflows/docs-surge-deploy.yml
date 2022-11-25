@@ -54,7 +54,9 @@ jobs:
       - id: get-changelog
         run: |
           changelog=$(cat changelog)
-          echo "changelog=$changelog" >> $GITHUB_OUTPUT
+          echo "text<<EOF" >> $GITHUB_OUTPUT
+          echo "$changelog" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - id: get-deploy-id
         run: |
