@@ -1,3 +1,5 @@
 = New
 
-Lorem ipsum dolor sit
+Lorem ipsum dolor sit est, consectetur adipiscing elit.
+
+Nullam auctor, nisl nec luctus luctus, nisi erat luctus nisl, nec.
