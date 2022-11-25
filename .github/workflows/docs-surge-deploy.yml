@@ -18,32 +18,8 @@ on:
 
 
 jobs:
-  set-outputs:
-    runs-on: ubuntu-latest
-    # Map a step output to a job output
-    outputs:
-#       changelog: ${{ steps.get-changelog.outputs.changelog }}
-      deploy-id: ${{ steps.get-deploy-id.outputs.deploy-id }}
-      deploy-url: ${{ steps.get-deploy-url.outputs.deploy-url }}
-    steps:
-    
-#       - id: get-changelog
-#         run: |
-#           changelog = $(<changelog)
-#           echo "changelog=$changelog" >> $GITHUB_OUTPUT
-
-      - id: get-deploy-id
-        run: |
-          deployid=$(<deployid)
-          echo "deploy-id=$deployid" >> $GITHUB_OUTPUT
-
-      - id: get-deploy-url
-        run: |
-          deployurl=${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ steps.get-deploy-id.outputs.deploy-id }}.surge.sh
-          echo "deploy-url=$deployurl" >> $GITHUB_OUTPUT
       
-  publish-docs:
-    needs: set-outputs
+  get-docs:
 #     if: github.event.workflow_run.conclusion == 'success'
 
     runs-on: ubuntu-latest
@@ -72,7 +48,35 @@ jobs:
       
       - run: unzip docs.zip
       
- 
+  set-outputs:
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      changelog: ${{ steps.get-changelog.outputs.changelog }}
+      deploy-id: ${{ steps.get-deploy-id.outputs.deploy-id }}
+      deploy-url: ${{ steps.get-deploy-url.outputs.deploy-url }}
+    steps:
+    
+      - id: get-changelog
+        run: |
+          changelog = $(<changelog)
+          echo "changelog=$changelog" >> $GITHUB_OUTPUT
+
+      - id: get-deploy-id
+        run: |
+          deployid=$(<deployid)
+          echo "deploy-id=$deployid" >> $GITHUB_OUTPUT
+
+      - id: get-deploy-url
+        run: |
+          deployurl=${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ steps.get-deploy-id.outputs.deploy-id }}.surge.sh
+          echo "deploy-url=$deployurl" >> $GITHUB_OUTPUT
+      
+  
+  deploy-docs:
+    runs-on: ubuntu-latest
+    needs: set-outputs
+    steps:
       - uses: actions/setup-node@v3
         with:
           node-version: lts/*
@@ -82,14 +86,18 @@ jobs:
           npm install -g surge
           surge ./site ${{ needs.set-outputs.get-deploy-url.deploy-url }} --token ${{ secrets.SURGE_TOKEN }}
           
-      - name: Save changelog to file
-        run: |
-          gh pr view ${{ github.event.workflow_run.id }} --json files --jq \
-          'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes |  (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "http://${{ needs.set-outputs.outputs.deploy-url }}/${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}/\(.f)" ) ) ) ' \
-          | npx pino-pretty
-        env:
-          GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
+#       - name: Save changelog to file
+#         run: |
+#           gh pr view ${{ github.event.workflow_run.id }} --json files --jq \
+#           'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes |  (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "http://${{ needs.set-outputs.outputs.deploy-url }}/${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}/\(.f)" ) ) ) ' \
+#           | npx pino-pretty
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
 
+  add-comment:
+    runs-on: ubuntu-latest
+      needs: set-outputs
+      steps:
       - name: Comment on PR
         uses: marocchino/sticky-pull-request-comment@v2
         with:
@@ -99,6 +107,10 @@ jobs:
             Looks like you've updated the documentation!
 
             Check out your changes at ${{ needs.set-outputs.get-deploy-url.deploy-url }}
+            
+            ${{ needs.set-outputs.get-changelog.changelog }}
+            
+            
 
           GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
           
