@@ -27,6 +27,9 @@ jobs:
       deploy-url: ${{ steps.get-deploy-url.outputs.deploy-url }}
 
     steps:
+
+      - uses: actions/checkout@v3
+
       - name: "Download built documentation"
         id: get-docs
         uses: actions/github-script@v6.0.0
@@ -78,13 +81,6 @@ jobs:
           npm install -g surge
           deployurl=${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ steps.get-deploy-id.outputs.deploy-id }}.surge.sh
           surge ./site $deployurl --token ${{ secrets.SURGE_TOKEN }}
-
-      # - name: Add changelog comment
-      #   uses: actions/checkout@v3
-      #   run: |
-      #     gh pr comment  ${{ steps.get-deploy-id.outputs.deploy-id }} --body-file changelog --edit-last
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
           
       - name: Comment on PR (sticky)
         uses: marocchino/sticky-pull-request-comment@v2
@@ -94,5 +90,9 @@ jobs:
           recreate: true
           GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
 
-          
+      - name: Add changelog comment
+        run: |
+          gh pr comment  ${{ steps.get-deploy-id.outputs.deploy-id }} --body-file changelog --edit-last
+        env:
+          GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}          
 
