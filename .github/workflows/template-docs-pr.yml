@@ -59,7 +59,7 @@ jobs:
         run: |
           echo "This PR contains docs changes
           
-          You can review the changes at ${{ needs.setup.get-deploy-url.deploy-url }}"
+          You can review the changes at ${{ needs.setup.get-deploy-url.deploy-url }}
 
           Changed files:
           " > changelog
