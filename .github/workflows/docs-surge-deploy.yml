@@ -100,9 +100,8 @@ jobs:
           number: ${{ needs.setup.get-deploy-id.outputs.deploy-id }}
           changes: 'a list of files'
           message: |
-            Looks like you've updated the documentation!
-
-            Check out your changes at ${{ needs.setup.get-deploy-url.deploy-url }}
+            
+            Review the changes for this PR at ${{ needs.setup.get-deploy-url.deploy-url }}
             
             ${{ needs.setup.get-changelog.changelog }}
             
