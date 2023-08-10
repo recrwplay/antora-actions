@@ -49,10 +49,16 @@ jobs:
         node-version: '16'
 
     - run: npm install --omit=dev
-    - run: npm run ${{ inputs.package-script }}
+
+    - name: Generate HTML
+      env:
+        SCRIPT: ${{ inputs.package-script }}
+      run: npm run $SCRIPT
 
     - name: Save event-id
-      run: echo ${{ inputs.deploy-id }} > ./build/deployid
+      env:
+        EVENT_ID: ${{ inputs.deploy-id }}
+      run: echo $EVENT_ID > ./build/deployid
 
     - name: Upload HTML artifact
       uses: actions/upload-artifact@v3
