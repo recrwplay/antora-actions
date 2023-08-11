@@ -105,3 +105,6 @@ dist
 
 # Antora
 build/
+
+# VSCode
+.vscode/

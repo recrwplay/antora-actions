@@ -11,5 +11,3 @@ I have {no-attribute} that I can use here.
 This sentence has been added to see if the pr comment is repeated or updated.
 
 This branch contains a change to test inputs when building from a PR.
-
-// yes
