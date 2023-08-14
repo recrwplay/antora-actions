@@ -29,6 +29,8 @@ jobs:
       - name: "Download built documentation"
         uses: actions/github-script@v6.0.0
         with:
+          RUN_ID: ${{env.RUN_ID}}
+          WORKSPACE: ${{env.WORKSPACE}}
           script: |
             var artifacts = await github.rest.actions.listWorkflowRunArtifacts({
                owner: context.repo.owner,
