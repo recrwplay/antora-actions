@@ -28,16 +28,15 @@ jobs:
     steps:
       - name: "Download built documentation"
         uses: actions/github-script@v6.0.0
-        RUN_ID: ${{env.RUN_ID}}
-        WORKSPACE: ${{env.WORKSPACE}}
-        with:
+        env: 
           RUN_ID: ${{env.RUN_ID}}
           WORKSPACE: ${{env.WORKSPACE}}
+        with:
           script: |
             var artifacts = await github.rest.actions.listWorkflowRunArtifacts({
                owner: context.repo.owner,
                repo: context.repo.repo,
-               run_id: $RUN_ID,
+               run_id: RUN_ID,
             });
             var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
               return artifact.name == "docs"
@@ -49,7 +48,7 @@ jobs:
                archive_format: 'zip',
             });
             var fs = require('fs');
-            fs.writeFileSync('$WORKSPACE/docs.zip', Buffer.from(download.data));
+            fs.writeFileSync('WORKSPACE/docs.zip', Buffer.from(download.data));
       
       - run: unzip docs.zip
       
