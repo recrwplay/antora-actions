@@ -27,7 +27,7 @@ jobs:
     steps:
       - name: "Download built documentation"
         uses: actions/github-script@v6.0.0
-        env: 
+        env:
           RUN_ID: ${{ github.event.workflow_run.id }}
           WORKSPACE: ${{ github.workspace }}
         with:
