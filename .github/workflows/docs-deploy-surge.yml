@@ -74,6 +74,7 @@ jobs:
         shell: bash
         env:
           DEPLOY_URL: ${{ steps.get-deploy-url.outputs.deploy-url }}
+          SURGE_TOKEN: "${{ secrets.SURGE_TOKEN }}"
         run: |
           npm install -g surge
           surge ./site $DEPLOY_URL --token "$SURGE_TOKEN"
@@ -88,4 +89,4 @@ jobs:
             This PR includes documentation updates.
 
             You can view the updated docs at https://$DEPLOY_URL
-          GITHUB_TOKEN: ${{ secrets.DOCS_PR_COMMENT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
