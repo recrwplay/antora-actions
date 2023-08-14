@@ -88,5 +88,5 @@ jobs:
           message: |
             This PR includes documentation updates.
 
-            You can view the updated docs at https://$DEPLOY_URL
+            You can view the updated docs at https://${{ env.DEPLOY_URL }}
           GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
