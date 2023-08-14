@@ -28,6 +28,8 @@ jobs:
     steps:
       - name: "Download built documentation"
         uses: actions/github-script@v6.0.0
+        RUN_ID: ${{env.RUN_ID}}
+        WORKSPACE: ${{env.WORKSPACE}}
         with:
           script: |
             var artifacts = await github.rest.actions.listWorkflowRunArtifacts({
