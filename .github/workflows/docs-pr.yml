@@ -1,0 +1,77 @@
+# This is an example of the docs-pr.yml workflow available from the recrwplay org
+name: "Verify PR dev"
+
+on:
+  pull_request:
+    branches:
+    - dev
+
+jobs:
+
+  docs-build-for-pr:
+    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-build.yml@dev
+    with:
+      deploy-id: ${{ github.event.number }}
+      retain-artifacts: 14
+
+  docs-verify-for-pr:
+    needs: docs-build-for-pr
+    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-verify.yml@dev
+    
+    
+  set-outputs:
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      deploy-id: ${{ github.event.number }}
+      deploy-url: ${{ steps.get-deploy-url.outputs.deploy-url }}
+    steps:
+      - id: get-deploy-url
+        run: |
+          deployurl=${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ github.event.number }}.surge.sh
+          echo "deploy-url=$deployurl" >> $GITHUB_OUTPUT      
+        
+  # save-changes:
+  #   needs: set-outputs
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Check out PR branch
+  #       uses: actions/checkout@v3
+        
+  #     - name: Read antora component name
+  #       id: antora-component-name
+  #       uses: jbutcher5/read-yaml@main
+  #       with:
+  #         file: './antora.yml'
+  #         key-path: '["name"]'
+
+  #     - name: Read antora component version
+  #       id: antora-component-version
+  #       uses: jbutcher5/read-yaml@main
+  #       with:
+  #         file: './antora.yml'
+  #         key-path: '["version"]'
+
+  #     - name: Comment preamble
+  #       run: |
+  #         echo "This PR contains docs changes
+          
+  #         You can review the changes at https://${{ needs.set-outputs.outputs.deploy-url }}
+
+  #         Changed files:
+  #         " > changelog
+                  
+  #     - name: Save changelog to file
+  #       run: |
+  #         gh pr view 13 --json files --jq \
+  #         'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes |  (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "- [\(.f)](https://${{ needs.set-outputs.outputs.deploy-url }}/${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}/\(.f))" ) ) ) ' \
+  #         | npx pino-pretty >> changelog
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
+          
+  #     - name: Upload changelog
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: docs
+  #         path: changelog
+
