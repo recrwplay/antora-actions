@@ -19,6 +19,7 @@ jobs:
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-verify.yml@dev
     
   set-outputs:
+    needs: docs-build-for-pr
     runs-on: ubuntu-latest
     # Map a step output to a job output
     outputs:
@@ -89,7 +90,9 @@ jobs:
 
       - name: Get file changes
         id: get-file-changes
-        uses: trilom/file-changes-action@v1.2.3
+        uses: trilom/file-changes-action@v1.2.4
+        with:
+          prNumber: ${{ github.event.number }}
 
       - name: Generate preview links
         uses: actions/github-script@v6.4.1
@@ -103,7 +106,22 @@ jobs:
           script: |
             const modifiedFiles = ${{ env.MODIFIEDFILES }}
             const newFiles = ${{ env.NEWFILES }}
+            const pageFiles = $(cat ./.meta/pageList)
             console.log(`Modified files: ${modifiedFiles}`)
+            console.log(`Page files: ${pageFiles}`)
+
+            if (newFiles) {
+              for (const file of $(newFiles)) {
+                console.log(`New file: ${file}`)
+              }
+            }
+
+            if (modifiedFiles) {
+              for (const file of $(modifiedFiles)) {
+                console.log(`Modified file: ${file}`)
+              }
+            }
+
 
       - name: Upload changelog
         uses: actions/upload-artifact@v3
