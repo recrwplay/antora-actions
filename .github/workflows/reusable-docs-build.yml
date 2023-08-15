@@ -8,10 +8,10 @@ on:
         type: string
         default: 'build-verify'
       deploy-id:
-        description: 'The PR number if workflow called by a PR'
+        description: 'The Deploy ID or PR number if workflow called by a PR'
         required: true
-        type: string
-        default: 'na'
+        type: number
+        default: 0
       retain-artifacts:
         description: 'The number of days to retain artifacts'
         required: true
@@ -25,10 +25,10 @@ on:
         type: string
         default: 'build-verify'
       deploy-id:
-        description: 'An id if the output is to be deployed'
+        description: 'A deploy ID'
         required: true
-        type: string
-        default: 'id-'
+        type: number
+        default: 0
       retain-artifacts:
         description: 'The number of days to retain artifacts'
         required: true
