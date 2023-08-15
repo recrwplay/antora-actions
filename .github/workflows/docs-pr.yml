@@ -98,8 +98,8 @@ jobs:
           RUN_ID: ${{ github.event.workflow_run.id }}
           WORKSPACE: ${{ github.workspace }}
           DEPLOYID: ${{ github.event.number }}
-          MODIFIEDFILES: ${{ steps.file_changes.outputs.files_modified }}
-          NEWFILES: ${{ steps.file_changes.outputs.files_added }}
+          MODIFIEDFILES: ${{ steps.get-file-changes.outputs.files_modified }}
+          NEWFILES: ${{ steps.get-file-changes.outputs.files_added }}
         with:
           script: |
             const modifiedFiles = $MODIFIEDFILES
