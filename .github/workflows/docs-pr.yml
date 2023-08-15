@@ -102,11 +102,12 @@ jobs:
           DEPLOYID: ${{ github.event.number }}
           MODIFIEDFILES: ${{ steps.get-file-changes.outputs.files_modified }}
           NEWFILES: ${{ steps.get-file-changes.outputs.files_added }}
+          PAGEFILES: "./.meta/pageList"
         with:
           script: |
             const modifiedFiles = ${{ env.MODIFIEDFILES }}
             const newFiles = ${{ env.NEWFILES }}
-            const pageFiles = $(cat ./.meta/pageList)
+            const pageFiles = $(cat ${{ env.PAGEFILES }})
             console.log(`Modified files: ${modifiedFiles}`)
             console.log(`Page files: ${pageFiles}`)
 
