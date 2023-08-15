@@ -1,5 +1,5 @@
 # This is an example of the docs-pr.yml workflow available from the recrwplay org
-name: "Verify PR dev"
+name: "Verify PR"
 
 on:
   pull_request:
@@ -19,17 +19,17 @@ jobs:
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-verify.yml@dev
     
     
-  set-outputs:
-    runs-on: ubuntu-latest
-    # Map a step output to a job output
-    outputs:
-      deploy-id: ${{ github.event.number }}
-      deploy-url: ${{ steps.get-deploy-url.outputs.deploy-url }}
-    steps:
-      - id: get-deploy-url
-        run: |
-          deployurl=${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ github.event.number }}.surge.sh
-          echo "deploy-url=$deployurl" >> $GITHUB_OUTPUT      
+  # set-outputs:
+  #   runs-on: ubuntu-latest
+  #   # Map a step output to a job output
+  #   outputs:
+  #     deploy-id: ${{ github.event.number }}
+  #     deploy-url: ${{ steps.get-deploy-url.outputs.deploy-url }}
+  #   steps:
+  #     - id: get-deploy-url
+  #       run: |
+  #         deployurl=${{ github.event.repository.owner.login}}-${{ github.event.repository.name}}-${{ github.event.number }}.surge.sh
+  #         echo "deploy-url=$deployurl" >> $GITHUB_OUTPUT      
         
   # save-changes:
   #   needs: set-outputs

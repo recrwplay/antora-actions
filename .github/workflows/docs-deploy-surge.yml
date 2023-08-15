@@ -4,11 +4,11 @@
 # This workflow expects the triggering workflow to generate an artifact called "docs"
 
 # - update the reference to "docs" and "docs.zip" in this workflow if your triggering workflow generates an artifact with a different name
-name: "Deploy to surge (security)"
+name: "Deploy docs preview"
 
 on:
   workflow_run:
-    workflows: ["Verify PR dev"]
+    workflows: ["Verify PR"]
     types:
       - completed
 
@@ -17,12 +17,6 @@ jobs:
     if: github.event.workflow_run.conclusion == 'success'
 
     runs-on: ubuntu-latest
-
-    # env:
-      # RUN_ID: ${{ github.event.workflow_run.id }}
-      # WORKSPACE: ${{ github.workspace }}
-      # SURGE_TOKEN: "${{ secrets.DOCS_SURGE_TOKEN }}"
-
 
     steps:
       - name: "Download built documentation"
