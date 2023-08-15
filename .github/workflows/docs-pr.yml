@@ -54,6 +54,15 @@ jobs:
           file: './antora.yml'
           key-path: '["version"]'
 
+      - name: Generate docs path
+        id: antora-docs-path
+        env:
+          COMPONENT_NAME: ${{ steps.antora-component-name.outputs.data }}
+          COMPONENT_VERSION: ${{ steps.antora-component-version.outputs.data }}
+          DEPLOYURL: ${{ needs.set-outputs.outputs.deploy-url }}
+        run: |
+          echo "docs-path=$COMPONENT_NAME/$COMPONENT_VERSION" >> $GITHUB_OUTPUT
+
       - name: Comment preamble
         env:
           DEPLOYURL: ${{ needs.set-outputs.outputs.deploy-url }}
@@ -69,9 +78,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
           DEPLOYID: ${{ github.event.number }}
+          DEPLOYURL: ${{ needs.set-outputs.outputs.deploy-url }}
+          DOCSPATH: ${{ steps.antora-docs-path.outputs.docs-path }}
         run: |
           gh pr view $DEPLOYID --json files --jq \
-          'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes |  (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "- [\(.f)](https://${{ needs.set-outputs.outputs.deploy-url }}/${{ steps.antora-component-name.outputs.data }}/${{ steps.antora-component-version.outputs.data }}/\(.f))" ) ) ) ' \
+          'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes \
+          | (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "- [\(.f)](https://$DEPLOYURL/$DOCSPATH/\(.f))" ) ) ) ' \
           | npx pino-pretty >> changelog
         
           
