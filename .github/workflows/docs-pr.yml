@@ -103,6 +103,7 @@ jobs:
           name: page-list
 
       - name: Read page list
+        id: read-page-list
         run: |
           pagelist=$(cat pageList)
           pagelist="${pagelist//'%'/'%25'}"
@@ -118,7 +119,7 @@ jobs:
           DEPLOYID: ${{ github.event.number }}
           MODIFIEDFILES: ${{ steps.get-file-changes.outputs.files_modified }}
           NEWFILES: ${{ steps.get-file-changes.outputs.files_added }}
-          PAGEFILES: ${{ steps.get-page-list.outputs.page-list }}
+          PAGEFILES: ${{ steps.read-page-list.outputs.page-list }}
         with:
           script: |
             const modifiedFiles = ${{ env.MODIFIEDFILES }}
