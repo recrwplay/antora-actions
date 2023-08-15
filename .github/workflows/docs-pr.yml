@@ -105,7 +105,10 @@ jobs:
       - name: Read page list
         run: |
           pagelist=$(cat pageList)
-          echo "page-list=${pagelist//'%'/'%25'}" >> "$GITHUB_OUTPUT"
+          pagelist="${pagelist//'%'/'%25'}"
+          pagelist="${pagelist//$'\n'/'%0A'}"
+          pagelist="${pagelist//$'\r'/'%0D'}"
+          echo "page-list=${pagelist}" >> "$GITHUB_OUTPUT"
 
       - name: Generate preview links
         uses: actions/github-script@v6.4.1
