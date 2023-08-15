@@ -104,7 +104,7 @@ jobs:
 
       - name: Read page list
         run: |
-          pagelist=$(<page-list)
+          pagelist=$(<pageList)
           echo "page-list=$pagelist" >> "$GITHUB_OUTPUT"
 
       - name: Generate preview links
