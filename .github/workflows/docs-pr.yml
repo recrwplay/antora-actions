@@ -86,8 +86,26 @@ jobs:
           'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes \
           | (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "- [\(.f)](https://$DEPLOYURL/$DOCSPATH/\(.f))" ) ) ) ' \
           | npx pino-pretty >> changelog
-        
-          
+
+
+      - name: Get file changes
+        id: get-file-changes
+        uses: trilom/file-changes-action@v1.2.3
+
+      - name: Generate preview links
+        uses: actions/github-script@v6.4.1
+        env:
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          WORKSPACE: ${{ github.workspace }}
+          DEPLOYID: ${{ github.event.number }}
+          MODIFIEDFILES: ${{ steps.file_changes.outputs.files_modified }}
+          NEWFILES: ${{ steps.file_changes.outputs.files_added }}
+        with:
+          script: |
+            const modifiedFiles = $MODIFIEDFILES
+            const newFiles = $NEWFILES
+            console.log(`Modified files: ${modifiedFiles}`)
+
       - name: Upload changelog
         uses: actions/upload-artifact@v3
         with:
