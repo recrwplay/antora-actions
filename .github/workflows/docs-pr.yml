@@ -13,6 +13,7 @@ jobs:
     with:
       deploy-id: ${{ github.event.number }}
       retain-artifacts: 14
+      pageList: true
 
   docs-verify-for-pr:
     needs: docs-build-for-pr
@@ -97,8 +98,13 @@ jobs:
 
       - name: Get page List
         id: get-page-list
+        uses: actions/download-artifact@v3
+        with:
+          name: page-list
+
+      - name: Read page list
         run: |
-          pagelist=$(<build/site/.meta/pageList)
+          pagelist=$(<page-list)
           echo "page-list=$pagelist" >> "$GITHUB_OUTPUT"
 
       - name: Generate preview links

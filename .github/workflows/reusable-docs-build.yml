@@ -17,6 +17,11 @@ on:
         required: true
         type: number
         default: 7
+      pageList:
+        description: 'Upload page list artifact'
+        required: true
+        type: boolean
+        default: false
   workflow_dispatch:
     inputs:
       package-script:
@@ -34,6 +39,11 @@ on:
         required: true
         type: number
         default: 7
+      pageList:
+        description: 'Upload page list artifact'
+        required: true
+        type: boolean
+        default: false
 
 
 jobs:
@@ -73,4 +83,12 @@ jobs:
       with:
         name: antora-log
         path: build/log
+        retention-days: ${{ inputs.retain-artifacts }}
+
+    - name: Upload Page List artifact
+      if: ${{ inputs.pageList }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: page-list
+        path: build/site/.meta/pageList
         retention-days: ${{ inputs.retain-artifacts }}
