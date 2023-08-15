@@ -128,7 +128,7 @@ jobs:
             console.log(`Modified files: ${modifiedFiles}`)
 
             if (modifiedFiles) {
-              for (const file of $(modifiedFiles)) {
+              for (const file of modifiedFiles) {
                 console.log(`Modified file: ${file}`)
               }
             }
