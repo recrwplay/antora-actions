@@ -98,7 +98,7 @@ jobs:
       - name: Get page List
         id: get-page-list
         run: |
-          pagelist=$(<.meta/pageList)
+          pagelist=$(<build/site/.meta/pageList)
           echo "page-list=$pagelist" >> "$GITHUB_OUTPUT"
 
       - name: Generate preview links
