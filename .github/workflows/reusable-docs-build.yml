@@ -60,8 +60,9 @@ jobs:
 
     - name: Save event-id
       run:
-        case "$DEPLOY_ID" in ''|*[!0-9]*) echo "Provided deploy-id is not an integer"; exit 1 ;; esac 
-        echo $DEPLOY_ID > ./build/deployid
+        deployid=$DEPLOY_ID
+        case "$deployid" in ''|*[!0-9]*) echo "Provided deploy-id is not an integer"; exit 1 ;; esac 
+        echo $deployid > ./build/deployid
 
     - name: Upload HTML artifact
       uses: actions/upload-artifact@v3
