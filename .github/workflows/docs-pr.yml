@@ -94,6 +94,12 @@ jobs:
         with:
           prNumber: ${{ github.event.number }}
 
+      - name: Get page List
+        id: get-page-list
+        run: |
+          pagelist=$(<.meta/pagelist)
+          echo "page-list=$pagelist" >> "$GITHUB_OUTPUT"
+
       - name: Generate preview links
         uses: actions/github-script@v6.4.1
         env:
@@ -102,12 +108,12 @@ jobs:
           DEPLOYID: ${{ github.event.number }}
           MODIFIEDFILES: ${{ steps.get-file-changes.outputs.files_modified }}
           NEWFILES: ${{ steps.get-file-changes.outputs.files_added }}
-          PAGEFILES: ".meta/pageList"
+          PAGEFILES: ${{ steps.get-page-list.outputs.page-list }}}
         with:
           script: |
             const modifiedFiles = ${{ env.MODIFIEDFILES }}
             const newFiles = ${{ env.NEWFILES }}
-            const pageFiles = $(cat ${{ env.PAGEFILES }})
+            const pageFiles = ${{ env.PAGEFILES }}
             console.log(`Modified files: ${modifiedFiles}`)
             console.log(`Page files: ${pageFiles}`)
 
