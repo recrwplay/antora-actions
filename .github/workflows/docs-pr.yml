@@ -126,13 +126,6 @@ jobs:
             const newFiles = ${{ env.NEWFILES }}
             const pageFiles = ${{ env.PAGEFILES }}
             console.log(`Modified files: ${modifiedFiles}`)
-            console.log(`Page files: ${pageFiles}`)
-
-            if (newFiles) {
-              for (const file of $(newFiles)) {
-                console.log(`New file: ${file}`)
-              }
-            }
 
             if (modifiedFiles) {
               for (const file of $(modifiedFiles)) {
