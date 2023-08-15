@@ -101,8 +101,8 @@ jobs:
           NEWFILES: ${{ steps.get-file-changes.outputs.files_added }}
         with:
           script: |
-            const modifiedFiles = $MODIFIEDFILES
-            const newFiles = $NEWFILES
+            const modifiedFiles = ${{ env.MODIFIEDFILES }}
+            const newFiles = ${{ env.NEWFILES }}
             console.log(`Modified files: ${modifiedFiles}`)
 
       - name: Upload changelog
