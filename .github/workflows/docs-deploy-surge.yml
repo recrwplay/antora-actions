@@ -73,26 +73,22 @@ jobs:
           npm install -g surge
           surge ./site $DEPLOY_URL --token "$SURGE_TOKEN"
 
-      # - name: Comment on PR
-      #   uses: marocchino/sticky-pull-request-comment@v2
-      #   env:
-      #     DEPLOY_URL: ${{ steps.get-deploy-url.outputs.deploy-url }}
-      #   with:
-      #     number: ${{ steps.get-deploy-id.outputs.deploy-id }}
-      #     message: |
-      #       This PR includes documentation updates.
+      - name: Comment on PR
+        if: ${{ hashFiles('changelog') == '' }}
+        uses: marocchino/sticky-pull-request-comment@v2
+        env:
+          DEPLOY_URL: ${{ steps.get-deploy-url.outputs.deploy-url }}
+        with:
+          number: ${{ steps.get-deploy-id.outputs.deploy-id }}
+          message: |
+            This PR includes documentation updates.
 
-      #       You can view the updated docs at https://${{ env.DEPLOY_URL }}
-      #     GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
+            You can view the updated docs at https://${{ env.DEPLOY_URL }}
+          GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
 
-      # - id: get-changelog
-      #   run: |
-      #     changelog=$(cat changelog)
-      #     echo "text<<EOF" >> $GITHUB_OUTPUT
-      #     echo "$changelog" >> $GITHUB_OUTPUT
-      #     echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Comment on PR (changelog)
+        if: ${{ hashFiles('changelog') != '' }}
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           number: ${{ steps.get-deploy-id.outputs.deploy-id }}
