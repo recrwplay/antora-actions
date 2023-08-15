@@ -103,7 +103,7 @@ jobs:
           DEPLOYID: ${{ github.event.number }}
           MODIFIEDFILES: ${{ steps.get-file-changes.outputs.files_modified }}
           NEWFILES: ${{ steps.get-file-changes.outputs.files_added }}
-          PAGEFILES: "./.meta/pageList"
+          PAGEFILES: ".meta/pageList"
         with:
           script: |
             const modifiedFiles = ${{ env.MODIFIEDFILES }}
