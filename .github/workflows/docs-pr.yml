@@ -123,7 +123,7 @@ jobs:
             const modifiedFiles = ${{ env.MODIFIEDFILES }}
             const newFiles = ${{ env.NEWFILES }}
             const pageFiles = ${{ env.PAGEFILES }}
-            const deployurl = "${{ env.DEPLOYURL }}"
+            const deployurl = "https://${{ env.DEPLOYURL }}"
 
             const preamble = `This PR contains docs changes\nYou can review the changes at ${deployurl}`
             let newFilesList = ''
@@ -138,7 +138,7 @@ jobs:
                 if (file.includes('/pages/')) {
                   const url = pageFiles[file].url
                   const title = pageFiles[file].title
-                  links.push(`- [${title}](${url})`)
+                  links.push(`- [${title}](${deployurl}/${url})`)
                 }
               }
             
