@@ -85,8 +85,8 @@ jobs:
           PAGEFILES: ${{ steps.read-page-list.outputs.page-list }}
         with:
           script: |
-            const modifiedFiles = ${{ env.MODIFIEDFILES }}.split(',')
-            const newFiles = ${{ env.NEWFILES }}.split(',')
+            const modifiedFiles = "${{ env.MODIFIEDFILES }}".split(',')
+            const newFiles = "${{ env.NEWFILES }}".split(',')
             const pageFiles = ${{ env.PAGEFILES }}
             const deployurl = "https://${{ env.DEPLOYURL }}"
 
