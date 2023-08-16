@@ -43,51 +43,51 @@ jobs:
       - name: Check out PR branch
         uses: actions/checkout@v3
         
-      - name: Read antora component name
-        id: antora-component-name
-        uses: jbutcher5/read-yaml@main
-        with:
-          file: './antora.yml'
-          key-path: '["name"]'
+      # - name: Read antora component name
+      #   id: antora-component-name
+      #   uses: jbutcher5/read-yaml@main
+      #   with:
+      #     file: './antora.yml'
+      #     key-path: '["name"]'
 
-      - name: Read antora component version
-        id: antora-component-version
-        uses: jbutcher5/read-yaml@main
-        with:
-          file: './antora.yml'
-          key-path: '["version"]'
+      # - name: Read antora component version
+      #   id: antora-component-version
+      #   uses: jbutcher5/read-yaml@main
+      #   with:
+      #     file: './antora.yml'
+      #     key-path: '["version"]'
 
-      - name: Generate docs path
-        id: antora-docs-path
-        env:
-          COMPONENT_NAME: ${{ steps.antora-component-name.outputs.data }}
-          COMPONENT_VERSION: ${{ steps.antora-component-version.outputs.data }}
-          DEPLOYURL: ${{ needs.set-outputs.outputs.deploy-url }}
-        run: |
-          echo "docs-path=$COMPONENT_NAME/$COMPONENT_VERSION" >> $GITHUB_OUTPUT
+      # - name: Generate docs path
+      #   id: antora-docs-path
+      #   env:
+      #     COMPONENT_NAME: ${{ steps.antora-component-name.outputs.data }}
+      #     COMPONENT_VERSION: ${{ steps.antora-component-version.outputs.data }}
+      #     DEPLOYURL: ${{ needs.set-outputs.outputs.deploy-url }}
+      #   run: |
+      #     echo "docs-path=$COMPONENT_NAME/$COMPONENT_VERSION" >> $GITHUB_OUTPUT
 
-      - name: Comment preamble
-        env:
-          DEPLOYURL: ${{ needs.set-outputs.outputs.deploy-url }}
-        run: |
-          echo "This PR contains docs changes
+      # - name: Comment preamble
+      #   env:
+      #     DEPLOYURL: ${{ needs.set-outputs.outputs.deploy-url }}
+      #   run: |
+      #     echo "This PR contains docs changes
           
-          You can review the changes at https://$DEPLOYURL
+      #     You can review the changes at https://$DEPLOYURL
 
-          Changed files:
-          " > changelog
+      #     Changed files:
+      #     " > changelog
                   
-      - name: Save changelog to file
-        env:
-          GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
-          DEPLOYID: ${{ github.event.number }}
-          DEPLOYURL: ${{ needs.set-outputs.outputs.deploy-url }}
-          DOCSPATH: ${{ steps.antora-docs-path.outputs.docs-path }}
-        run: |
-          gh pr view $DEPLOYID --json files --jq \
-          'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes \
-          | (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "- [\(.f)](https://$DEPLOYURL/$DOCSPATH/\(.f))" ) ) ) ' \
-          | npx pino-pretty >> changelog
+      # - name: Save changelog to file
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
+      #     DEPLOYID: ${{ github.event.number }}
+      #     DEPLOYURL: ${{ needs.set-outputs.outputs.deploy-url }}
+      #     DOCSPATH: ${{ steps.antora-docs-path.outputs.docs-path }}
+      #   run: |
+      #     gh pr view $DEPLOYID --json files --jq \
+      #     'limit(10; .files.[] | select(.path | contains("/pages/")) as $changes \
+      #     | (.path | sub("modules/.+/pages/(?<f>.*).adoc"; "- [\(.f)](https://$DEPLOYURL/$DOCSPATH/\(.f))" ) ) ) ' \
+      #     | npx pino-pretty >> changelog
 
 
       - name: Get file changes
@@ -117,6 +117,7 @@ jobs:
           RUN_ID: ${{ github.event.workflow_run.id }}
           WORKSPACE: ${{ github.workspace }}
           DEPLOYID: ${{ github.event.number }}
+          DEPLOYURL: ${{ needs.set-outputs.outputs.deploy-url }}
           MODIFIEDFILES: ${{ steps.get-file-changes.outputs.files_modified }}
           NEWFILES: ${{ steps.get-file-changes.outputs.files_added }}
           PAGEFILES: ${{ steps.read-page-list.outputs.page-list }}
@@ -125,13 +126,45 @@ jobs:
             const modifiedFiles = ${{ env.MODIFIEDFILES }}
             const newFiles = ${{ env.NEWFILES }}
             const pageFiles = ${{ env.PAGEFILES }}
+            const deployurl = ${{ env.DEPLOYURL }}
+
+            const preamble = `This PR contains docs changes\nYou can review the changes at ${deployurl}`
             console.log(`Modified files: ${modifiedFiles}`)
 
-            if (modifiedFiles) {
-              for (const file of modifiedFiles) {
-                console.log(`Modified file: ${file}`)
+            if (newFiles) {
+              const links = []
+              for (const file of newFiles) {
+                # console.log(`New file: ${file}`)
+                if (file.includes('/pages/')) {
+                  const url = pageFiles[file].url
+                  const title = pageFiles[file].title
+                  links.push(`- [title](url)`)
+                }
               }
+
+              const newFilesList = `New pages:\n${links.join('\n')}`
+
             }
+
+            if (modifiedFiles) {
+              const links = []
+              for (const file of modifiedFiles) {
+                # console.log(`Modified file: ${file}`)
+                if (file.includes('/pages/')) {
+                  const url = pageFiles[file].url
+                  const title = pageFiles[file].title
+                  links.push(`- [title](url)`)
+                }
+              }
+
+              const modifiedFilesList = `Updated pages:\n${links.join('\n')}`
+
+            }
+
+            const comment = `${preamble}\n\n${newFilesList}\n\n${modifiedFilesList}`
+
+            var fs = require('fs');
+            fs.writeFileSync('${{ env.WORKSPACE }}/changelog', Buffer.from(comment));
 
 
       - name: Upload changelog
