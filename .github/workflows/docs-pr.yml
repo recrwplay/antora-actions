@@ -74,7 +74,7 @@ jobs:
           echo "page-list=${pagelist}" >> "$GITHUB_OUTPUT"
 
       - name: Generate preview links
-        if: steps.get-file-changes.outputs.any_changed == 'true'
+        # if: steps.get-file-changes.outputs.any_changed == 'true'
         uses: actions/github-script@v6.4.1
         env:
           WORKSPACE: ${{ github.workspace }}
