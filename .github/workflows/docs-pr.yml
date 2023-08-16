@@ -48,7 +48,8 @@ jobs:
       - name: Get file changes
         id: get-file-changes
         uses: tj-actions/changed-files@v37
-        # with:
+        with:
+          separator: ','
         #   files_yaml: |
         #     pages:
         #       - **/modules/**/pages/**/*.adoc
@@ -80,8 +81,8 @@ jobs:
         env:
           WORKSPACE: ${{ github.workspace }}
           DEPLOYURL: ${{ needs.set-outputs.outputs.deploy-url }}
-          MODIFIEDFILES: ${{ steps.get-file-changes.outputs.all_changed_and_modified_files }}
-          NEWFILES: ${{ steps.get-file-changes.outputs.added_files }}
+          MODIFIEDFILES: ${{ steps.get-file-changes.outputs.all_changed_and_modified_files }}.split(',')
+          NEWFILES: ${{ steps.get-file-changes.outputs.added_files }}.split(',')
           PAGEFILES: ${{ steps.read-page-list.outputs.page-list }}
         with:
           script: |
