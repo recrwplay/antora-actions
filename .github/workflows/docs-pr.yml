@@ -134,43 +134,11 @@ jobs:
             
             console.log(`Modified files: ${modifiedFiles}`)
             
-            if (newFiles.length !== 0) {
-              const links = []
-              console.log("Adding new files to comment")
-              for (const file of newFiles) {
-                if (file.includes('/pages/')) {
-                  const url = pageFiles[file].url
-                  const title = pageFiles[file].title
-                  links.push(`- [${title}](${url})`)
-                }
-              }
-            
-              newFilesList = `\n\nNew pages:\n${links.join('\n')}`
-            
-            }
-            
-            if (modifiedFiles.length !== 0) {
-              console.log("Adding modified files to comment")
-              const links = []
-              for (const file of modifiedFiles) {
-                console.log(`Modified file: ${file}`)
-                if (file.includes('/pages/')) {
-                  const url = pageFiles[file].url
-                  const title = pageFiles[file].title
-                  links.push(`- [${title}](${deployurl}/${url})`)
-                }
-              }
-              
-              modifiedFilesList = `\n\nUpdated pages:\n${links.join('\n')}`
-            
-            }
+
             
             const comment = `${preamble}${newFilesList}${modifiedFilesList}`
             
             console.log(`Comment: ${comment}`)
-            
-            var fs = require('fs');
-            fs.writeFileSync('${{ env.WORKSPACE }}/changelog', Buffer.from(comment));
 
 
       - name: Upload changelog
