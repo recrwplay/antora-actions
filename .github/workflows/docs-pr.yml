@@ -129,16 +129,7 @@ jobs:
             const deployurl = ${{ env.DEPLOYURL }}
 
             const preamble = `This PR contains docs changes\nYou can review the changes at ${deployurl}`
-            let newFilesList = ''
-            let modifiedFilesList = ''
-            
             console.log(`Modified files: ${modifiedFiles}`)
-            
-
-            
-            const comment = `${preamble}${newFilesList}${modifiedFilesList}`
-            
-            console.log(`Comment: ${comment}`)
 
 
       - name: Upload changelog
