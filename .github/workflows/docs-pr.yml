@@ -81,13 +81,13 @@ jobs:
         env:
           WORKSPACE: ${{ github.workspace }}
           DEPLOYURL: ${{ needs.set-outputs.outputs.deploy-url }}
-          MODIFIEDFILES: ${{ steps.get-file-changes.outputs.all_changed_and_modified_files }}.split(',')
-          NEWFILES: ${{ steps.get-file-changes.outputs.added_files }}.split(',')
+          MODIFIEDFILES: ${{ steps.get-file-changes.outputs.all_changed_and_modified_files }}
+          NEWFILES: ${{ steps.get-file-changes.outputs.added_files }}
           PAGEFILES: ${{ steps.read-page-list.outputs.page-list }}
         with:
           script: |
-            const modifiedFiles = ${{ env.MODIFIEDFILES }}
-            const newFiles = ${{ env.NEWFILES }}
+            const modifiedFiles = ${{ env.MODIFIEDFILES }}.split(',')
+            const newFiles = ${{ env.NEWFILES }}.split(',')
             const pageFiles = ${{ env.PAGEFILES }}
             const deployurl = "https://${{ env.DEPLOYURL }}"
 
