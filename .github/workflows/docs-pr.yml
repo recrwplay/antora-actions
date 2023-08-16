@@ -78,7 +78,7 @@ jobs:
             const pageFiles = ${{ env.PAGEFILES }}
             const deployurl = "https://${{ env.DEPLOYURL }}"
 
-            const preamble = `This PR contains docs changes\n`
+            const preamble = `This PR contains docs changes`
 
             let newFilesList = ''
             let modifiedFilesList = ''
@@ -117,12 +117,15 @@ jobs:
             
             }
             
-            const comment = `${preamble}${newFilesList}${modifiedFilesList}`
+            if (newFilesList !== '' || modifiedFilesList !== '') {
+              const comment = `${preamble}${newFilesList}${modifiedFilesList}`
             
-            console.log(`Comment: ${comment}`)
-
-            var fs = require('fs');
-            fs.writeFileSync('${{ env.WORKSPACE }}/changelog', Buffer.from(comment));
+              console.log(`Comment: ${comment}`)
+  
+              var fs = require('fs');
+              fs.writeFileSync('${{ env.WORKSPACE }}/changelog', Buffer.from(comment));
+            }
+            
 
 
       - name: Upload changelog
