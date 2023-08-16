@@ -78,7 +78,7 @@ jobs:
             const pageFiles = ${{ env.PAGEFILES }}
             const deployurl = "https://${{ env.DEPLOYURL }}"
 
-            const preamble = `This PR contains docs changes`
+            const preamble = `This PR includes documentation updates\n\View the updated docs at ${deployurl}`
 
             let newFilesList = ''
             let modifiedFilesList = ''
