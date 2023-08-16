@@ -130,7 +130,7 @@ jobs:
             const preamble = `This PR contains docs changes\nYou can review the changes at ${deployurl}`
             console.log(`Modified files: ${modifiedFiles}`)
 
-            if (newFiles) {
+            if (newFiles.length !== 0) {
               const links = []
               for (const file of newFiles) {
                 # console.log(`New file: ${file}`)
@@ -145,7 +145,7 @@ jobs:
 
             }
 
-            if (modifiedFiles) {
+            if (modifiedFiles.length !== 0) {
               const links = []
               for (const file of modifiedFiles) {
                 # console.log(`Modified file: ${file}`)
