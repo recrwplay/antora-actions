@@ -128,22 +128,10 @@ jobs:
             const deployurl = ${{ env.DEPLOYURL }}
 
             const preamble = `This PR contains docs changes\nYou can review the changes at ${deployurl}`
+            let newFilesList = ''
+            let modifiedFilesList = ''
+
             console.log(`Modified files: ${modifiedFiles}`)
-
-            if (newFiles.length !== 0) {
-              const links = []
-              console.log("Adding new files to comment")
-              for (const file of newFiles) {
-                if (file.includes('/pages/')) {
-                  # const url = pageFiles[file].url
-                  # const title = pageFiles[file].title
-                  # links.push(`- [title](url)`)
-                }
-              }
-
-              const newFilesList = `New pages:\n${links.join('\n')}`
-
-            }
 
             if (modifiedFiles.length !== 0) {
               console.log("Adding modified files to comment")
@@ -151,22 +139,17 @@ jobs:
               for (const file of modifiedFiles) {
                 console.log(`Modified file: ${file}`)
                 if (file.includes('/pages/')) {
-                  # const url = pageFiles[file].url
-                  # const title = pageFiles[file].title
-                  # links.push(`- [title](url)`)
+                  console.log(file)
                 }
               }
-
-              const modifiedFilesList = `Updated pages:\n${links.join('\n')}`
+              
+              modifiedFilesList = `Updated pages:\n${links.join('\n')}`
 
             }
 
             const comment = `${preamble}\n\n${newFilesList}\n\n${modifiedFilesList}`
 
             console.log(`Comment: ${comment}`)
-
-            # var fs = require('fs');
-            # fs.writeFileSync('${{ env.WORKSPACE }}/changelog', Buffer.from(comment));
 
 
       - name: Upload changelog
