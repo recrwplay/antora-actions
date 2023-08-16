@@ -114,9 +114,7 @@ jobs:
       - name: Generate preview links
         uses: actions/github-script@v6.4.1
         env:
-          RUN_ID: ${{ github.event.workflow_run.id }}
           WORKSPACE: ${{ github.workspace }}
-          DEPLOYID: ${{ github.event.number }}
           DEPLOYURL: ${{ needs.set-outputs.outputs.deploy-url }}
           MODIFIEDFILES: ${{ steps.get-file-changes.outputs.files_modified }}
           NEWFILES: ${{ steps.get-file-changes.outputs.files_added }}
@@ -126,7 +124,7 @@ jobs:
             const modifiedFiles = ${{ env.MODIFIEDFILES }}
             const newFiles = ${{ env.NEWFILES }}
             const pageFiles = ${{ env.PAGEFILES }}
-            const deployurl = "https://example.com"
+            const deployurl = "${{ env.DEPLOYURL }}"
 
             const preamble = `This PR contains docs changes\nYou can review the changes at ${deployurl}`
             let newFilesList = ''
@@ -168,6 +166,9 @@ jobs:
             const comment = `${preamble}${newFilesList}${modifiedFilesList}`
             
             console.log(`Comment: ${comment}`)
+
+            var fs = require('fs');
+            fs.writeFileSync('${{ env.WORKSPACE }}/changelog', Buffer.from(comment));
 
 
       - name: Upload changelog
