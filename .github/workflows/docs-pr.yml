@@ -96,9 +96,8 @@ jobs:
             
             console.log(`Modified files: ${modifiedFiles}`)
             
-            if (newFiles.length !== 0) {
+            if (newFiles) {
               const links = []
-              console.log("Adding new files to comment")
               for (const file of newFiles) {
                 if (file.includes('/pages/')) {
                   const url = pageFiles[file].url
@@ -107,15 +106,15 @@ jobs:
                 }
               }
             
-              newFilesList = `\n\nNew pages:\n${links.join('\n')}`
+              if (links.length !== 0) {
+                newFilesList = `\n\nNew pages:\n${links.join('\n')}`
+              }
             
             }
             
-            if (modifiedFiles.length !== 0) {
-              console.log("Adding modified files to comment")
+            if (modifiedFiles) {
               const links = []
               for (const file of modifiedFiles) {
-                console.log(`Modified file: ${file}`)
                 if (file.includes('/pages/')) {
                   const url = pageFiles[file].url
                   const title = pageFiles[file].title
@@ -123,7 +122,9 @@ jobs:
                 }
               }
               
-              modifiedFilesList = `\n\nUpdated pages:\n${links.join('\n')}`
+              if (links.length !== 0) {
+                modifiedFilesList = `\n\nUpdated pages:\n${links.join('\n')}`
+              }
             
             }
             
