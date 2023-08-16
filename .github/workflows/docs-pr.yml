@@ -18,16 +18,18 @@ jobs:
   docs-verify-for-pr:
     needs: docs-build-for-pr
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-verify.yml@dev
-    
-    
-  set-outputs:
+        
+  save-changelog:
     needs: docs-build-for-pr
     runs-on: ubuntu-latest
-    # Map a step output to a job output
-    outputs:
-      deploy-url: ${{ steps.get-deploy-url.outputs.deploy-url }}
     steps:
-      - id: get-deploy-url
+      - name: Check out PR branch
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+      
+      - name: Get deploy URL
+        id: get-deploy-url
         env:
           ORG: ${{ github.event.repository.owner.login }}
           REPO: ${{ github.event.repository.name }}
@@ -35,15 +37,6 @@ jobs:
         run: |
           deployurl=$ORG-$REPO-$DEPLOYID.surge.sh
           echo "deploy-url=$deployurl" >> $GITHUB_OUTPUT
-        
-  save-changelog:
-    needs: set-outputs
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out PR branch
-        uses: actions/checkout@v3
-        with:
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
 
       - name: Get file changes
         id: get-file-changes
@@ -53,12 +46,6 @@ jobs:
         #   files_yaml: |
         #     pages:
         #       - **/modules/**/pages/**/*.adoc
-
-      # - name: Get file changes
-      #   id: get-file-changes
-      #   uses: trilom/file-changes-action@v1.2.4
-      #   with:
-      #     prNumber: ${{ github.event.number }}
 
       - name: Get page List
         id: get-page-list
@@ -80,7 +67,7 @@ jobs:
         uses: actions/github-script@v6.4.1
         env:
           WORKSPACE: ${{ github.workspace }}
-          DEPLOYURL: ${{ needs.set-outputs.outputs.deploy-url }}
+          DEPLOYURL: ${{ steps.get-deploy-url.outputs.deploy-url }}
           MODIFIEDFILES: ${{ steps.get-file-changes.outputs.modified_files }}
           NEWFILES: ${{ steps.get-file-changes.outputs.added_files }}
           PAGEFILES: ${{ steps.read-page-list.outputs.page-list }}
