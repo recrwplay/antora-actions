@@ -92,5 +92,5 @@ jobs:
           message: |
             Looks like you've updated the documentation!
 
-            Check out your changes at $DEPLOYURL
+            Check out your changes at $DEPLOY_URL
           GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
