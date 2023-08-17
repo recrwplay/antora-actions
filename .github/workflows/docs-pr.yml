@@ -7,7 +7,7 @@ on:
     - dev
 
 env:
-  GENERATE_CHANGELOG: true
+  GENERATE_CHANGELOG_COMMENT: true
 
 jobs:
 
@@ -23,7 +23,7 @@ jobs:
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-verify.yml@dev
 
   save-changelog:
-    if: github.env.GENERATE_CHANGELOG == 'true'
+    if: ${{ github.env.GENERATE_CHANGELOG_COMMENT == 'true' }}
     needs: docs-build-for-pr
     runs-on: ubuntu-latest
     steps:
