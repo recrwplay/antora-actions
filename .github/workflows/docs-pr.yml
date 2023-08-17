@@ -78,7 +78,7 @@ jobs:
             const { MODIFIEDFILES, NEWFILES, PAGEFILES, DEPLOYURL, WORKSPACE } = process.env
             const modifiedFiles = MODIFIEDFILES.split(',').slice(0,9)
             const newFiles = NEWFILES.split(',').slice(0,9)
-            const pageFiles = JSON.parse(fs.readFileSync('${{ env.WORKSPACE }}/pageList'))
+            const pageFiles = JSON.parse(readFileSync('${{ env.WORKSPACE }}/pageList'))
             const deployurl = DEPLOYURL
             const preamble = `This PR includes documentation updates\n\View the updated docs at https://${deployurl}`
 
