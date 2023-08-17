@@ -22,6 +22,10 @@ on:
         required: true
         type: boolean
         default: false
+    outputs:
+        pages-listed:
+          description: "Page list artifact was uploaded"
+          value: ${{ jobs.build-docs.outputs.pages-listed }}
   workflow_dispatch:
     inputs:
       package-script:
@@ -49,6 +53,8 @@ on:
 jobs:
   build-docs:
     runs-on: ubuntu-latest
+    outputs:
+      pages-listed: ${{ steps.page-list-artifact.outcome }}
 
     env:
       PACKAGE_SCRIPT: ${{ inputs.package-script }}
@@ -86,6 +92,7 @@ jobs:
         retention-days: ${{ inputs.retain-artifacts }}
 
     - name: Upload Page List artifact
+      id: page-list-artifact
       if: ${{ inputs.pageList }}
       uses: actions/upload-artifact@v3
       with:
