@@ -79,7 +79,6 @@ jobs:
             const newFiles = "${{ env.NEWFILES }}".split(',').slice(0,9)
             const pageFiles = ${{ env.PAGEFILES }}
             const deployurl = "https://${{ env.DEPLOYURL }}"
-
             const preamble = `This PR includes documentation updates\n\View the updated docs at ${deployurl}`
 
             let newFilesList = ''
