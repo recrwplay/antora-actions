@@ -23,7 +23,7 @@ jobs:
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-verify.yml@dev
 
   save-changelog:
-    if: env.GENERATE_CHANGELOG_COMMENT
+    if: ${{ GENERATE_CHANGELOG_COMMENT }}
     needs: docs-build-for-pr
     runs-on: ubuntu-latest
     steps:
