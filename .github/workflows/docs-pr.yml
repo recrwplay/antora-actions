@@ -23,9 +23,9 @@ jobs:
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-verify.yml@dev
 
   save-changelog:
-    if: ${{ env.GENERATE_CHANGELOG == 'true' }}
     needs: docs-build-for-pr
     runs-on: ubuntu-latest
+    if: $GENERATE_CHANGELOG == 'true'
     steps:
       - name: Check out PR branch
         uses: actions/checkout@v3
