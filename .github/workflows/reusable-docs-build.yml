@@ -14,12 +14,10 @@ on:
         default: 0
       retain-artifacts:
         description: 'The number of days to retain artifacts'
-        required: true
         type: number
         default: 7
       pageList:
         description: 'Upload page list artifact'
-        required: true
         type: boolean
         default: false
     outputs:
@@ -40,12 +38,11 @@ on:
         default: 0
       retain-artifacts:
         description: 'The number of days to retain artifacts'
-        required: true
         type: number
         default: 7
       pageList:
         description: 'Upload page list artifact'
-        required: true
+        required: false
         type: boolean
         default: false
 
