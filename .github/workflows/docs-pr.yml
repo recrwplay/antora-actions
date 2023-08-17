@@ -71,7 +71,7 @@ jobs:
           DEPLOYURL: ${{ steps.get-deploy-url.outputs.deploy-url }}
           MODIFIEDFILES: ${{ steps.get-file-changes.outputs.pages_modified_files }}
           NEWFILES: ${{ steps.get-file-changes.outputs.pages_added_files }}
-          PAGEFILES: ${{ steps.read-page-list.outputs.page-list }}
+          PAGEFILES: ${{ toJson(steps.read-page-list.outputs.page-list) }}
         with:
           script: |
             const { MODIFIEDFILES, NEWFILES, PAGEFILES, DEPLOYURL, WORKSPACE } = process.env
