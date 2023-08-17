@@ -81,6 +81,9 @@ jobs:
             const deployurl = DEPLOYURL
             const preamble = `This PR includes documentation updates\n\View the updated docs at https://${deployurl}`
 
+            console.log(`Modified Files:${modifiedFiles}`)
+            console.log(`New Files:${newFiles}`)
+
             let newFilesList = ''
             let modifiedFilesList = ''
             
