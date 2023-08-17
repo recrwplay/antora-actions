@@ -83,6 +83,7 @@ jobs:
 
             console.log(`Modified Files:${modifiedFiles}`)
             console.log(`New Files:${newFiles}`)
+            console.log(`Page Files:${pageFiles}`)
 
             let newFilesList = ''
             let modifiedFilesList = ''
@@ -91,6 +92,7 @@ jobs:
               const links = []
               for (const file of newFiles) {
                 if (file.includes('/pages/')) {
+                  console.log(`New file: ${file}`)
                   const url = pageFiles[file].url.replace("/index.html", "")
                   const title = pageFiles[file].title
                   links.push(`- [${title}](${deployurl}/${url})`)
@@ -107,6 +109,7 @@ jobs:
               const links = []
               for (const file of modifiedFiles) {
                 if (file.includes('/pages/')) {
+                  console.log(`Modified file: ${file}`)
                   const url = pageFiles[file].url.replace("/index.html", "")
                   const title = pageFiles[file].title
                   links.push(`- [${title}](${deployurl}/${url})`)
