@@ -6,9 +6,6 @@ on:
     branches:
     - dev
 
-env:
-  GENERATE_CHANGELOG_COMMENT: true
-
 jobs:
 
   docs-build-for-pr:
@@ -16,14 +13,14 @@ jobs:
     with:
       deploy-id: ${{ github.event.number }}
       retain-artifacts: 14
-      pageList: ${{ GENERATE_CHANGELOG_COMMENT }}
+      pageList: true
 
   docs-verify-for-pr:
     needs: docs-build-for-pr
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-verify.yml@dev
 
   save-changelog:
-    if: ${{ GENERATE_CHANGELOG_COMMENT }}
+    if: ${{ needs.docs-build-for-pr.outputs.pages-listed == 'success' }} 
     needs: docs-build-for-pr
     runs-on: ubuntu-latest
     steps:
