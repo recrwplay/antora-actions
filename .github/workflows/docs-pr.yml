@@ -124,8 +124,8 @@ jobs:
             }
 
             if (others.length !== 0) {
-                comment.concat(`\n\nNew or updated pages that are not in the deployed HTML:\n${others.join('\n')}`
-              }
+              comment.concat(`\n\nNew or updated pages that are not in the deployed HTML:\n${others.join('\n')}`)
+            }
             
             writeFileSync(`${WORKSPACE}/changelog`, Buffer.from(comment));
 
