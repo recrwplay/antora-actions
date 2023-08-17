@@ -93,6 +93,8 @@ jobs:
               for (const file of newFiles) {
                 if (file.includes('/pages/')) {
                   console.log(`New file: ${file}`)
+                  console.log("Looking for this in pageFiles")
+                  console.log(pageFiles[file])
                   const url = pageFiles[file].url.replace("/index.html", "")
                   const title = pageFiles[file].title
                   links.push(`- [${title}](${deployurl}/${url})`)
