@@ -71,13 +71,13 @@ jobs:
           DEPLOYURL: ${{ steps.get-deploy-url.outputs.deploy-url }}
           MODIFIEDFILES: ${{ steps.get-file-changes.outputs.pages_modified_files }}
           NEWFILES: ${{ steps.get-file-changes.outputs.pages_added_files }}
-          PAGEFILES: ${{ toJson(steps.read-page-list.outputs.page-list) }}
+          PAGEFILES: ${{ steps.read-page-list.outputs.page-list }}
         with:
           script: |
             const { MODIFIEDFILES, NEWFILES, PAGEFILES, DEPLOYURL, WORKSPACE } = process.env
             const modifiedFiles = MODIFIEDFILES.split(',').slice(0,9)
             const newFiles = NEWFILES.split(',').slice(0,9)
-            const pageFiles = PAGEFILES
+            const pageFiles = ${{ env.PAGEFILES }}
             const deployurl = DEPLOYURL
             const preamble = `This PR includes documentation updates\n\View the updated docs at https://${deployurl}`
 
