@@ -75,7 +75,7 @@ jobs:
         with:
           script: |
             const { MODIFIEDFILES, NEWFILES, PAGEFILES, DEPLOYURL, WORKSPACE } = process.env
-            const modifiedFiles = "MODIFIEDFILES".split(',').slice(0,9)
+            const modifiedFiles = "$MODIFIEDFILES".split(',').slice(0,9)
             const newFiles = "${{ env.NEWFILES }}".split(',').slice(0,9)
             const pageFiles = ${{ env.PAGEFILES }}
             const deployurl = "https://${{ env.DEPLOYURL }}"
