@@ -81,3 +81,16 @@ jobs:
           path: changelog
           recreate: true
           GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
+
+      - name: Comment on PR (no changelog)
+        if: ${{ hashFiles('changelog') == '' }}
+        env:
+          DEPLOY_URL: ${{ steps.get-deploy-url.outputs.deploy-url }}
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          number: ${{ steps.get-deploy-id.outputs.deploy-id }}
+          message: |
+            Looks like you've updated the documentation!
+
+            Check out your changes at $DEPLOYURL
+          GITHUB_TOKEN: ${{ secrets.DOCS_PR_COMMENT_TOKEN }}
