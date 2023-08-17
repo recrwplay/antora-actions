@@ -54,15 +54,6 @@ jobs:
         with:
           name: page-list
 
-      - name: Read page list for PR changelog
-        id: read-page-list
-        run: |
-          pagelist=$(cat pageList)
-          pagelist="${pagelist//'%'/'%25'}"
-          pagelist="${pagelist//$'\n'/'%0A'}"
-          pagelist="${pagelist//$'\r'/'%0D'}"
-          echo "page-list=${pagelist}" >> "$GITHUB_OUTPUT"
-
       - name: Generate PR changelog comment
         if: steps.get-file-changes.outputs.pages_any_changed == 'true'
         uses: actions/github-script@v6.4.1
@@ -71,34 +62,31 @@ jobs:
           DEPLOYURL: ${{ steps.get-deploy-url.outputs.deploy-url }}
           MODIFIEDFILES: ${{ steps.get-file-changes.outputs.pages_modified_files }}
           NEWFILES: ${{ steps.get-file-changes.outputs.pages_added_files }}
-          PAGEFILES: ${{ steps.read-page-list.outputs.page-list }}
         with:
           script: |
             var { readFileSync, writeFileSync } = require('fs');
             const { MODIFIEDFILES, NEWFILES, PAGEFILES, DEPLOYURL, WORKSPACE } = process.env
             const modifiedFiles = MODIFIEDFILES.split(',').slice(0,9)
             const newFiles = NEWFILES.split(',').slice(0,9)
-            const pageFiles = JSON.parse(readFileSync('${{ env.WORKSPACE }}/pageList'))
+            const pageFiles = JSON.parse(readFileSync('${WORKSPACE}/pageList'))
             const deployurl = DEPLOYURL
             const preamble = `This PR includes documentation updates\n\View the updated docs at https://${deployurl}`
 
-            console.log(`Modified Files:${modifiedFiles}`)
-            console.log(`New Files:${newFiles}`)
-            console.log(`Page Files:${pageFiles}`)
-
             let newFilesList = ''
             let modifiedFilesList = ''
+            let others = []
             
             if (newFiles) {
               const links = []
               for (const file of newFiles) {
                 if (file.includes('/pages/')) {
-                  console.log(`New file: ${file}`)
-                  console.log("Looking for this in pageFiles")
-                  console.log(pageFiles[file])
-                  const url = pageFiles[file].url.replace("/index.html", "")
-                  const title = pageFiles[file].title
-                  links.push(`- [${title}](${deployurl}/${url})`)
+                  if (Object.values(pageFiles).includes(file)) {
+                    const url = pageFiles[file].url.replace("/index.html", "")
+                    const title = pageFiles[file].title
+                    links.push(`- [${title}](${deployurl}/${url})`)
+                  } else {
+                    others.push(` - ${file} (**NEW**)`)
+                  }
                 }
               }
             
@@ -112,10 +100,13 @@ jobs:
               const links = []
               for (const file of modifiedFiles) {
                 if (file.includes('/pages/')) {
-                  console.log(`Modified file: ${file}`)
-                  const url = pageFiles[file].url.replace("/index.html", "")
-                  const title = pageFiles[file].title
-                  links.push(`- [${title}](${deployurl}/${url})`)
+                  if (Object.values(pageFiles).includes(file)) {
+                    const url = pageFiles[file].url.replace("/index.html", "")
+                    const title = pageFiles[file].title
+                    links.push(`- [${title}](${deployurl}/${url})`)
+                  } else {
+                    others.push(` - ${file} (updated)`)
+                  }
                 }
               }
               
@@ -124,16 +115,19 @@ jobs:
               }
             
             }
+
+            let comment = preamble
             
             if (newFilesList !== '' || modifiedFilesList !== '') {
-              const comment = `${preamble}${newFilesList}${modifiedFilesList}`
-            
+              comment = comment.concat(newFilesList,modifiedFilesList)
               console.log(`Comment: ${comment}`)
-  
-              writeFileSync('${{ env.WORKSPACE }}/changelog', Buffer.from(comment));
             }
-            
 
+            if (others.length !== 0) {
+                comment.concat(`\n\nNew or updated pages that are not in the deployed HTML:\n${others.join('\n')}`
+              }
+            
+            writeFileSync(`${WORKSPACE}/changelog`, Buffer.from(comment));
 
       - name: Upload changelog
         if: ${{ hashFiles('changelog') != '' }}
