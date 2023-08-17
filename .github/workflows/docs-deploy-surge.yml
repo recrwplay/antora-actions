@@ -93,4 +93,4 @@ jobs:
             Looks like you've updated the documentation!
 
             Check out your changes at $DEPLOYURL
-          GITHUB_TOKEN: ${{ secrets.DOCS_PR_COMMENT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
