@@ -54,11 +54,11 @@ jobs:
           script: |
             var { readFileSync, writeFileSync } = require('fs');
             const { LINKFILES, WORKSPACE } = process.env
-            cons linkFiles = LINKFILES
+            const linkFiles = LINKFILES
             const pageFiles = JSON.parse(readFileSync(`${WORKSPACE}/pageList`))
             const localhost = "https://localhost:8000"
 
-            if (!linkFiles) return
+            if (linkFiles == '') return
             
             let linkFilesToTest = []
 
