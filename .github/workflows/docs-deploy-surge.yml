@@ -94,3 +94,12 @@ jobs:
 
             Check out your changes at https://${{ env.DEPLOY_URL }}
           GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
+
+      - name: Add Check status to PR
+      uses: LouisBrunner/checks-action@v1.6.2
+      if: always()
+      with:
+        sha: ${{ github.event.pull_request.head.sha }}
+        token: ${{ GITHUB_TOKEN }}
+        name: Docs deploy
+        conclusion: ${{ job.status }}
