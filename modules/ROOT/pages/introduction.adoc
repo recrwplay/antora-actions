@@ -1,3 +1,5 @@
 # Introduction
 
 Introduction
+
+link:example.com/target[Example]
