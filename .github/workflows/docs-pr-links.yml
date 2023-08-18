@@ -41,7 +41,7 @@ jobs:
         if: ${{ steps.get-link-count.outputs.link-count > 0 }}
         run: | 
             npm install --omit=dev
-            npm run build
+            npm run build-verify
 
       - name: Generate PR changelog comment
         if: steps.get-file-changes.outputs.pages_any_changed == 'true'
