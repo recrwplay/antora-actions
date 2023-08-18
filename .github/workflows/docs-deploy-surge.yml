@@ -105,7 +105,7 @@ jobs:
         uses: LouisBrunner/checks-action@v1.6.2
         if: always()
         with:
-          sha: ${{ github.event.pull_request.head.sha }}
+          sha: ${{ github.event.workflow_run.head_sha }}
           token: ${{ steps.get-installation-token.outputs.token }}
           name: Docs deploy
           conclusion: ${{ job.status }}
