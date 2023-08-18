@@ -1,0 +1,94 @@
+# docs-pr-links.yml
+# Runs the link checker on the PR branch to verify files that contain new or changed links
+
+name: "Documentation PR link-checker"
+
+on:
+  pull_request:
+    branches:
+    - dev
+
+jobs:
+
+  check-diff-links:
+    name: List files containing new and changed links
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      # get files with link: from the diff
+      - run: git fetch origin ${{ github.base_ref }}
+
+
+      - id: get-link-count
+        run: |
+          linkcount="$(git diff origin/${{ github.base_ref }}..HEAD -Glink: --name-only | wc -l)"
+          echo "$linkcount"
+          echo "link-count=$linkcount" >> $GITHUB_OUTPUT
+      
+      - id: get-diff-links
+        run: |
+          linkfiles="git --no-pager diff origin/${{ github.base_ref }}..HEAD -Glink: --name-only"
+          echo "link-files = $linkfiles" >> GITHUB_OUTPUT
+
+
+      - name: Generate HTML
+        id: generate-html
+        if: ${{ steps.get-link-count.outputs.link-count > 0 }}
+        run: | 
+            npm install --omit=dev
+            npm run build
+
+      - name: Generate PR changelog comment
+        if: steps.get-file-changes.outputs.pages_any_changed == 'true'
+        uses: actions/github-script@v6.4.1
+        env:
+          WORKSPACE: ${{ github.workspace }}
+          LINKFILES: ${{ steps.get-diff-links.outputs.link-diff }}
+        with:
+          script: |
+            var { readFileSync, writeFileSync } = require('fs');
+            const { LINKFILES, WORKSPACE } = process.env
+            cons linkFiles = LINKFILES
+            const pageFiles = JSON.parse(readFileSync(`${WORKSPACE}/pageList`))
+            const localhost = "https://localhost:8000"
+            
+            let linkFilesToTest = []
+
+            if (linkFiles) {
+                const links = []
+                for (const file of linkFiles) {
+                if (file.includes('/pages/')) {
+                    if (Object.keys(pageFiles).includes(file)) {
+                    const url = pageFiles[file].url.replace("/index.html", "")
+                    const title = pageFiles[file].title
+                    linkFilesToTest.push(`${localhost}/${url}`)
+                    }
+                }
+                }
+            }
+            
+            if (linkFilesToTest.length !== 0) {
+                writeFileSync(`${WORKSPACE}/diff-links.txt`, Buffer.from(linkFilesToTest.join('\n')));
+            }
+            
+
+      - name: Check links
+        if: ${{ steps.get-link-count.outputs.link-count > 0 }}
+        run: | 
+          $(npm bin)/link-checker build/site --do-file diff-links.txt --skip-file scripts/ignore-links.txt
+
+      # upload file list
+
+      - name: Save diff output as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: diff
+          path: diff-links.txt
+
+    outputs:
+      link-count: ${{ steps.get-link-count.outputs.link-count }}
