@@ -55,7 +55,7 @@ jobs:
             var { readFileSync, writeFileSync } = require('fs');
             const { LINKFILES, WORKSPACE } = process.env
             const linkFiles = LINKFILES
-            const pageFiles = JSON.parse(readFileSync(`${WORKSPACE}/pageList`))
+            const pageFiles = JSON.parse(readFileSync(`${WORKSPACE}/build/site/.meta/pageList`))
             const localhost = "https://localhost:8000"
 
             if (linkFiles == '') return
