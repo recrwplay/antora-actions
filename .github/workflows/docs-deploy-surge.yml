@@ -95,11 +95,17 @@ jobs:
             Check out your changes at https://${{ env.DEPLOY_URL }}
           GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
 
+      - uses: tibdex/github-app-token@v1
+        id: get-installation-token
+        with: 
+          app_id: 377941
+          private_key: ${{ secrets.CHECKS_APP_TOKEN }}
+
       - name: Add Check status to PR
         uses: LouisBrunner/checks-action@v1.6.2
         if: always()
         with:
           sha: ${{ github.event.pull_request.head.sha }}
-          token: ${{ secrets.PR_COMMENT_TOKEN }}
+          token: ${{ steps.get-installation-token.outputs.token }}
           name: Docs deploy
           conclusion: ${{ job.status }}
