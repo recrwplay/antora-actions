@@ -34,7 +34,7 @@ jobs:
         run: |
           linkfiles="$(git --no-pager diff origin/${{ github.base_ref }}..HEAD -Glink: --name-only)"
           echo "$linkfiles"
-          echo "link-files=$linkfiles" >> GITHUB_OUTPUT
+          echo "link-files=$linkfiles" >> $GITHUB_OUTPUT
 
 
       - name: Generate HTML
