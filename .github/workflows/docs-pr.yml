@@ -19,7 +19,7 @@ jobs:
     needs: docs-build-for-pr
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-verify.yml@dev
 
-  save-changelog:
+  save-changelog-comment:
     if: ${{ needs.docs-build-for-pr.outputs.pages-listed == 'success' }} 
     needs: docs-build-for-pr
     runs-on: ubuntu-latest
@@ -65,12 +65,12 @@ jobs:
         with:
           script: |
             var { readFileSync, writeFileSync } = require('fs');
-            const { MODIFIEDFILES, NEWFILES, PAGEFILES, DEPLOYURL, WORKSPACE } = process.env
+            const { MODIFIEDFILES, NEWFILES, DEPLOYURL, WORKSPACE } = process.env
             const modifiedFiles = MODIFIEDFILES.split(',').slice(0,9)
             const newFiles = NEWFILES.split(',').slice(0,9)
             const pageFiles = JSON.parse(readFileSync(`${WORKSPACE}/pageList`))
-            const deployurl = DEPLOYURL
-            const preamble = `This PR includes documentation updates\n\View the updated docs at https://${deployurl}`
+            const deployurl = `https://${DEPLOYURL}`
+            const preamble = `This PR includes documentation updates\n\View the updated docs at ${deployurl}`
 
             let newFilesList = ''
             let modifiedFilesList = ''
