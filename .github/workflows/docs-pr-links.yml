@@ -43,8 +43,8 @@ jobs:
             npm install --omit=dev
             npm run build-verify
 
-      - name: Generate PR changelog comment
-        if: steps.get-file-changes.outputs.pages_any_changed == 'true'
+      - name: Generate URLs of files to check
+        if: ${{ steps.get-link-count.outputs.link-count > 0 }}
         uses: actions/github-script@v6.4.1
         env:
           WORKSPACE: ${{ github.workspace }}
