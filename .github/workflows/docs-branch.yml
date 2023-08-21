@@ -12,6 +12,7 @@ jobs:
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-build.yml@dev
     with:
       retain-artifacts: 14
+      deploy-id: 0
 
   docs-verify-for-pr:
     needs: docs-build-for-pr
