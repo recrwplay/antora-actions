@@ -35,6 +35,7 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: docs
+        path: build
 
     - name: Checkout package file
       uses: actions/checkout@v3
