@@ -5,15 +5,24 @@ on:
   push:
     branches:
     - dev
+  schedule:
+    - cron:  '00 16 * * *'
 
 jobs:
 
-  docs-build-for-pr:
+  docs-build:
+    name: Generate HTML
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-build.yml@dev
     with:
       retain-artifacts: 14
       deploy-id: 0
 
-  docs-verify-for-pr:
-    needs: docs-build-for-pr
+  docs-verify:
+    name: Verify HTML
+    needs: docs-build
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-verify.yml@dev
+
+  docs-links:
+    name: Check links
+    needs: docs-build
+    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-links.yml@dev
