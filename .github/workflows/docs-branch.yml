@@ -1,0 +1,18 @@
+# This is an example of the docs-pr.yml workflow available from the recrwplay org
+name: "Verify Branch"
+
+on:
+  push:
+    branches:
+    - dev
+
+jobs:
+
+  docs-build-for-pr:
+    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-build.yml@dev
+    with:
+      retain-artifacts: 14
+
+  docs-verify-for-pr:
+    needs: docs-build-for-pr
+    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-verify.yml@dev

@@ -1,0 +1,53 @@
+# docs-pr-links.yml
+# Runs the link checker on the PR branch to verify files that contain new or changed links
+
+name: "Check documentation links"
+
+on:
+  push:
+    branches:
+    - dev
+
+jobs:
+
+  check-links:
+    name: Check links
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v3
+
+      - name: Generate HTML
+        id: generate-html
+        run: | 
+            npm install --omit=dev
+            npm run build-verify
+
+      - name: Run link-checker
+        id: run-link-checker
+        run: npm run check-links |& tee link-log.txt
+
+      # upload artifacts
+
+      - name: Save log
+        uses: actions/upload-artifact@v3
+        with:
+          name: linklog
+          path: link-log.txt
+
+      - id: warn-count
+        name: Warning count
+        run: |
+          warncount=$(grep -e "[0-9]* warnings" -o link-log.txt | sed 's/ warnings//' )
+          if [ $warncount -gt 0 ]; then
+            echo "::warning:: $warncount warnings"
+          fi
+
+      - id: error-count
+        name: Error count
+        run: |
+          errorcount=$(grep -e "[0-9]* errors" -o link-log.txt | sed 's/ errors//' )
+          if [ $errorcount -gt 0 ]; then
+            echo "::error:: Errors found: See the output of the Check links step for details"
+            exit 1
+          fi

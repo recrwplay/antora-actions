@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-verify": "antora --stacktrace --fetch preview.yml --log-format=json --log-level=info --log-file ./build/log/log.json",
-    "publish-verify": "antora --stacktrace --fetch publish.yml --log-format=json --log-file ./build/log/log.json"
+    "publish-verify": "antora --stacktrace --fetch publish.yml --log-format=json --log-file ./build/log/log.json",
+    "check-links": "link-checker build/site"
   },
   "keywords": [
     "antora"
