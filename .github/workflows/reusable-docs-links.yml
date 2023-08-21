@@ -37,7 +37,7 @@ jobs:
         name: docs
 
     - name: Install link checker
-      run: npm install @recrwplay/link-checker
+      run: npm install github:recrwplay/link-checker#v0.2.0
 
     - name: Use Node.js 16
       uses: actions/setup-node@v3
