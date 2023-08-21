@@ -41,6 +41,7 @@ jobs:
       with:
         sparse-checkout: |
           package.json
+          scripts/
         sparse-checkout-cone-mode: false
 
     - name: Install link checker
