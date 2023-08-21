@@ -36,6 +36,13 @@ jobs:
       with:
         name: docs
 
+    - name: Checkout package file
+      uses: actions/checkout@v3
+      with:
+        sparse-checkout: |
+          package.json
+        sparse-checkout-cone-mode: false
+
     - name: Install link checker
       run: npm install github:recrwplay/link-checker#v0.2.0
 
