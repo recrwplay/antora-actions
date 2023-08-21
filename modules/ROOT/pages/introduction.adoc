@@ -2,4 +2,8 @@
 
 Introduction
 
-link:eanple.com[asd]
+// link:https://google.com[Google]
+link:https://neo4j.com/docs/getting-started/made-up-url[Getting Started]
+link:https://neo4j.com/docs/getting-started/data-modeling/[Data modeling]
+link:https://neo4j.com/docs/aura[Aura]
+link:https://neo4j.com/docs/aura/auradb[AuraDB]
