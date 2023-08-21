@@ -24,19 +24,13 @@ on:
         default: 7
 
 jobs:
-  build-docs:
+  check-links:
     runs-on: ubuntu-latest
 
     env:
       PACKAGE_SCRIPT: ${{ inputs.package-script }}
 
     steps:    
-    - name: Download HTML
-      uses: actions/download-artifact@v3
-      with:
-        name: docs
-        path: build
-
     - name: Checkout package file
       uses: actions/checkout@v3
       with:
@@ -44,6 +38,15 @@ jobs:
           package.json
           scripts/
         sparse-checkout-cone-mode: false
+
+    - name: Download HTML
+      uses: actions/download-artifact@v3
+      with:
+        name: docs
+        path: build
+
+    - name: Display structure of downloaded files
+      run: ls -R
 
     - name: Install link checker
       run: npm install github:recrwplay/link-checker#v0.2.0
