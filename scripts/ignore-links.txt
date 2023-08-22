@@ -17,3 +17,6 @@ _/fonts/
 # footer links
 docs.google.com
 twitter.com
+
+# graph academy
+graphacademy.neo4j.com
