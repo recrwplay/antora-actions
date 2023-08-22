@@ -2,6 +2,11 @@
 
 Introduction
 
-link:https://neo4j.com/docs/getting-started/data-modeling/[Data modeling]
-link:https://neo4j.com/docs/aura[Aura]
-link:https://neo4j.com/docs/aura/auradb[AuraDB]
+[NOTE]
+====
+This page has been updated
+====
+
+* link:https://neo4j.com/docs/getting-started/data-modeling/[Data modeling]
+* link:https://neo4j.com/docs/aura[Aura]
+* link:https://neo4j.com/docs/aura/auradb[AuraDB]
