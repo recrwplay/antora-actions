@@ -20,3 +20,4 @@ twitter.com
 
 # graph academy
 graphacademy.neo4j.com
+neo4j.com/graphacademy/
