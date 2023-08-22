@@ -56,10 +56,10 @@ jobs:
       - name: list files
         run: ls -R
 
-      # - uses: errata-ai/vale-action@reviewdog
-      #   with:
-      #     files: ${{ inputs.files }}
-      #     reporter: ${{ inputs.reporter }}
-      #     fail_on_error: ${{ inputs.vale-fail-on-error }}
-      #   env:
-      #     GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - uses: errata-ai/vale-action@reviewdog
+        with:
+          files: ${{ inputs.files }}
+          reporter: ${{ inputs.reporter }}
+          fail_on_error: ${{ inputs.vale-fail-on-error }}
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
