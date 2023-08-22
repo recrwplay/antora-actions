@@ -1,3 +1,4 @@
 * xref:index.adoc[]
 * xref:introduction.adoc[]
 * xref:renamed-page.adoc[]
+* xref:path/comment-test.adoc[]
