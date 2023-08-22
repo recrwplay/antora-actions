@@ -78,6 +78,7 @@ jobs:
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           number: ${{ steps.get-deploy-id.outputs.deploy-id }}
+          recreate: true
           header: changelog
           path: changelog
           GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
