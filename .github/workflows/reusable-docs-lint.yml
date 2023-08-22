@@ -10,7 +10,7 @@ on:
     inputs:
       files:
         description: 'The files to lint'
-        default: '["modules/ROOT/pages", "modules/ROOT/partials"]'
+        default: '["modules/ROOT/pages/", "modules/ROOT/partials/"]'
         type: string
       vale-fail-on-error:
         description: 'Report vale errors as a failure'
@@ -28,7 +28,7 @@ on:
     inputs:
       files:
         description: 'The files to lint'
-        default: '["modules/ROOT/pages", "modules/ROOT/partials"]'
+        default: '["modules/ROOT/pages/", "modules/ROOT/partials/"]'
         type: string
       vale-fail-on-error:
         description: 'Report vale errors as a failure'
