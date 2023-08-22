@@ -1,2 +1,4 @@
 * xref:index.adoc[]
 * xref:introduction.adoc[]
+* xref:new-page.adoc[]
+* xref:another-new-page.adoc[]
