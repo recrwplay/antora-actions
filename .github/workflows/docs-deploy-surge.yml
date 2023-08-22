@@ -79,7 +79,7 @@ jobs:
         with:
           number: ${{ steps.get-deploy-id.outputs.deploy-id }}
           recreate: true
-          header: changelog
+          header: docs-pr-changes
           path: changelog
           GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
 
@@ -90,7 +90,7 @@ jobs:
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           number: ${{ steps.get-deploy-id.outputs.deploy-id }}
-          header: no-changelog
+          header: docs-pr-changes
           message: |
             Looks like you've updated the documentation!
 
