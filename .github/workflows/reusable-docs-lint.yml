@@ -44,15 +44,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      # - name: download rules
-      #   uses: actions/checkout@v3
-      #   with:
-      #     repository: recrwplay/antora-build-verify
-      #     ref: dev
-      #     sparse-checkout: |
-      #       .vale.ini
-      #       .github/styles
-      #     sparse-checkout-cone-mode: false
+      - name: download rules
+        uses: actions/checkout@v3
+        with:
+          repository: recrwplay/antora-build-verify
+          ref: dev
+          sparse-checkout: |
+            .vale.ini
+            .github/styles
+          sparse-checkout-cone-mode: false
 
       - name: list files
         run: ls -R
