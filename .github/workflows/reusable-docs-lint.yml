@@ -59,7 +59,7 @@ jobs:
           ref: dev
           path: vale-rules
           sparse-checkout: |
-            styles
+            vale
           sparse-checkout-cone-mode: false
 
       - name: list files
@@ -71,5 +71,6 @@ jobs:
           reporter: ${{ inputs.reporter }}
           fail_on_error: ${{ inputs.vale-fail-on-error }}
           separator: ${{ inputs.separator }}
+          vale_flags: "--config='vale-rules/vale/.vale.ini'"
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
