@@ -1,0 +1,78 @@
+# Documentation Style Guide Lint
+# Uses Vale to lint documentation against the Documentation Style Guide
+# Current POC uses the Google style guide as a base set of rules
+# See .vale.ini for the current set of rules
+
+name: "Documentation Style Guide Check"
+
+on:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      files:
+        description: 'The files to lint'
+        default: '["modules/ROOT/pages", "modules/ROOT/partials"]'
+        type: string
+      vale-fail-on-error:
+        description: 'Report vale errors as a failure'
+        default: false
+        type: boolean
+
+jobs:
+
+  download-rules:
+    name: Download Vale rules
+    runs-on: ubuntu-latest
+    steps:
+      - name: download
+        uses: actions/checkout@v3
+        with:
+          repository: recrwplay/antora-build-verify
+          path: .github/styles
+
+  vale-config:
+    name: Get file list for vale
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Get file list
+        id: get-files-to-lint
+        run: |
+          if [ ${{ github.event.pull_request }} ]
+          then
+            files="$(gh pr view $PR_NUMBER --json files --jq 'map(.[] | select(.path | test("modules/ROOT/(pages|partials)"; "i") ) | .path) ')"
+            echo "$files"
+            echo "files-to-lint=$files" >> $GITHUB_OUTPUT 
+            echo "reporter=github-pr-check" >> $GITHUB_OUTPUT
+            echo "fail-on-error=true" >> $GITHUB_OUTPUT
+          else
+            echo 'files-to-lint=$INPUT_FILES' >> $GITHUB_OUTPUT
+            echo "reporter=github-check" >> $GITHUB_OUTPUT
+            echo "fail-on-error=$FAIL_ON_ERROR" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.number }}
+          INPUT_FILES: ${{ github.event.inputs.files }}
+          FAIL_ON_ERROR: ${{ github.event.inputs.vale-fail-on-error }}
+      
+    outputs:
+      files-to-lint: ${{ steps.get-files-to-lint.outputs.files-to-lint }}
+      reporter: ${{ steps.get-files-to-lint.outputs.reporter }}
+      fail-on-error: ${{ steps.get-files-to-lint.outputs.fail-on-error }}
+
+  vale:
+    name: Lint with Vale
+    runs-on: ubuntu-latest
+    needs: vale-config
+    if: ${{ needs.vale-config.outputs.files-to-lint != '[]' }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: errata-ai/vale-action@reviewdog
+        with:
+          files: ${{ needs.vale-config.outputs.files-to-lint }}
+          reporter: ${{ needs.vale-config.outputs.reporter }}
+          fail_on_error: ${{ needs.vale-config.outputs.fail-on-error }}
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
