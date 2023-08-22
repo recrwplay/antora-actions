@@ -53,6 +53,9 @@ jobs:
             .github/styles
           sparse-checkout-cone-mode: false
 
+      - name: list files
+        run: ls -R
+
       - uses: errata-ai/vale-action@reviewdog
         with:
           files: ${{ inputs.files }}
