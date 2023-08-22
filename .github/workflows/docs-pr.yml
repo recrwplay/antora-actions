@@ -19,13 +19,12 @@ jobs:
     needs: docs-build-for-pr
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-verify.yml@dev
 
-  docs-lint-for-pr:
-    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-lint.yml@dev
-
   save-changelog-comment:
     if: ${{ needs.docs-build-for-pr.outputs.pages-listed == 'success' }} 
     needs: docs-build-for-pr
     runs-on: ubuntu-latest
+    outputs:
+      files: ${{ steps.get-file-changes.outputs.all_changed_files }}
     steps:
       - name: Check out PR branch
         uses: actions/checkout@v3
@@ -139,4 +138,12 @@ jobs:
         with:
           name: docs
           path: changelog
+
+  docs-lint-for-pr:
+    needs: save-changelog-comment
+    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-lint.yml@dev
+    with:
+      files: ${{ needs.save-changelog-comment.outputs.files }}
+      vale-fail-on-error: true
+      reporter: github-pr-check
 
