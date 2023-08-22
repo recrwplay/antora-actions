@@ -1,3 +1,1 @@
-This is something I like to include in other pages
-
-Update to test PR comment
+This content is re-used by various pages.

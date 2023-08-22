@@ -2,11 +2,6 @@
 
 Introduction
 
-link:https://neo4j.com/docs/getting-started/made-up-url[Getting Started]
 link:https://neo4j.com/docs/getting-started/data-modeling/[Data modeling]
 link:https://neo4j.com/docs/aura[Aura]
 link:https://neo4j.com/docs/aura/auradb[AuraDB]
-
-neo4j should be capitalised.
-
-We don't say maybe around here.

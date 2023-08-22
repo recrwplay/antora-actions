@@ -1,7 +1,3 @@
 # A new page added in this PR
 
 Lorem ipsum.
-
-Click on is wrong.
-
-Maybe the rules are not being applied.
