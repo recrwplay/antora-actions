@@ -7,6 +7,6 @@ link:https://neo4j.com/docs/getting-started/data-modeling/[Data modeling]
 link:https://neo4j.com/docs/aura[Aura]
 link:https://neo4j.com/docs/aura/auradb[AuraDB]
 
-We don't talk about causal clusters any more.
+neo4j should be capitalised.
 
-neo4j is wrong.
+We don't say maybe around here.
