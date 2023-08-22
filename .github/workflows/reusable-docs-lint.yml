@@ -51,7 +51,7 @@ jobs:
           ref: dev
           path: vale-rules
           sparse-checkout: |
-            .github/styles/
+            .github
 
       - name: list files
         run: ls -R
