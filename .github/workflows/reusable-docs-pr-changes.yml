@@ -7,29 +7,12 @@ name: "Documentation Changelist"
 
 on:
   workflow_call:
-    inputs:
-      files:
-        description: 'The files to lint'
-        default: '.'
-        type: string
-      vale-fail-on-error:
-        description: 'Report vale errors as a failure'
-        default: false
-        type: boolean
-      reporter:
-        description: 'Where action messages are reported'
-        type: string
-        default: 'github-check'
-      separator:
-        description: 'Delimiter for input files or folders'
-        type: string
-        default: ''
 
 jobs:
   save-changelog-comment:
     runs-on: ubuntu-latest
     outputs:
-      files: ${{ steps.get-file-changes.outputs.asciidoc_all_changed_files }}
+      asciidoc-files: ${{ steps.get-file-changes.outputs.asciidoc_all_changed_files }}
 
     steps:
       - name: Get deploy URL
