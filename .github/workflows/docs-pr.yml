@@ -148,4 +148,5 @@ jobs:
       files: ${{ needs.save-changelog-comment.outputs.files }}
       vale-fail-on-error: true
       reporter: github-pr-check
+      separator: ','
 
