@@ -19,7 +19,7 @@ jobs:
     needs: docs-build-for-pr
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-verify.yml@dev
 
-  docs-pr-deploy-links:
+  docs-deploy-links-for-pr:
     if: ${{ needs.docs-build-for-pr.outputs.pages-listed == 'success' }}
     needs: docs-build-for-pr
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-pr-changes.yml@dev
@@ -28,7 +28,7 @@ jobs:
     needs: docs-pr-deploy-links
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-lint.yml@dev
     with:
-      files: ${{ needs.docs-pr-deploy-links.outputs.files }}
+      files: ${{ needs.docs-deploy-links-for-pr.outputs.files }}
       vale-fail-on-error: true
       reporter: github-pr-check
       separator: ','
