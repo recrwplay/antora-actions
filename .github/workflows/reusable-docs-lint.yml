@@ -51,9 +51,7 @@ jobs:
           ref: dev
           path: vale-rules
           sparse-checkout: |
-            .vale.ini
             .github/styles/
-          sparse-checkout-cone-mode: false
 
       - name: list files
         run: ls -R
