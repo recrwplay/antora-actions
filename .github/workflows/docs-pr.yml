@@ -19,6 +19,9 @@ jobs:
     needs: docs-build-for-pr
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-verify.yml@dev
 
+  docs-lint-for-pr:
+    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-lint.yml@dev
+
   save-changelog-comment:
     if: ${{ needs.docs-build-for-pr.outputs.pages-listed == 'success' }} 
     needs: docs-build-for-pr
@@ -54,6 +57,7 @@ jobs:
         with:
           name: page-list
 
+      # tbc - checkout the script from a repo so all docs projects can reuse it
       - name: Generate PR changelog comment
         if: steps.get-file-changes.outputs.pages_any_changed == 'true'
         uses: actions/github-script@v6.4.1
