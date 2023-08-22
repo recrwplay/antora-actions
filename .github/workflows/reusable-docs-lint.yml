@@ -71,5 +71,6 @@ jobs:
           reporter: ${{ inputs.reporter }}
           fail_on_error: ${{ inputs.vale-fail-on-error }}
           separator: ${{ inputs.separator }}
+          vale_flags: "--glob=*.adoc"
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
