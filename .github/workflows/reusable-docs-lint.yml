@@ -20,6 +20,10 @@ on:
         description: 'Where action messages are reported'
         type: string
         default: 'github-check'
+      separator:
+        description: 'Delimiter for input files or folders'
+        type: string
+        default: ''
   workflow_dispatch:
     inputs:
       files:
@@ -34,6 +38,10 @@ on:
         description: 'Where action messages are reported'
         type: string
         default: 'github-check'
+      separator:
+        description: 'Delimiter for input files or folders'
+        type: string
+        default: ''
 
 jobs:
 
@@ -62,5 +70,6 @@ jobs:
           files: ${{ inputs.files }}
           reporter: ${{ inputs.reporter }}
           fail_on_error: ${{ inputs.vale-fail-on-error }}
+          separator: ${{ inputs.separator }}
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
