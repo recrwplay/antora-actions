@@ -78,6 +78,7 @@ jobs:
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           number: ${{ steps.get-deploy-id.outputs.deploy-id }}
+          header: changelog
           path: changelog
           GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
 
@@ -88,6 +89,7 @@ jobs:
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           number: ${{ steps.get-deploy-id.outputs.deploy-id }}
+          header: no-changelog
           message: |
             Looks like you've updated the documentation!
 
