@@ -63,7 +63,7 @@ jobs:
           sparse-checkout-cone-mode: false
 
       - name: list files
-        run: ls -R
+        run: ls -a -R
 
       - uses: errata-ai/vale-action@reviewdog
         with:
