@@ -8,3 +8,5 @@ link:https://neo4j.com/docs/aura[Aura]
 link:https://neo4j.com/docs/aura/auradb[AuraDB]
 
 We don't talk about causal clusters any more.
+
+neo4j is wrong.
