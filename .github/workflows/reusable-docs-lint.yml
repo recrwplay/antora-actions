@@ -52,6 +52,7 @@ jobs:
           path: vale-rules
           sparse-checkout: |
             styles
+          sparse-checkout-cone-mode: false
 
       - name: list files
         run: ls -R
