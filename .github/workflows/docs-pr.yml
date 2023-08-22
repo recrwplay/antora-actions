@@ -23,6 +23,8 @@ jobs:
     if: ${{ needs.docs-build-for-pr.outputs.pages-listed == 'success' }} 
     needs: docs-build-for-pr
     runs-on: ubuntu-latest
+    outputs:
+      files: ${{ steps.get-file-changes.outputs.all_changed_files }}
     steps:
       - name: Check out PR branch
         uses: actions/checkout@v3
@@ -54,6 +56,7 @@ jobs:
         with:
           name: page-list
 
+      # tbc - checkout the script from a repo so all docs projects can reuse it
       - name: Generate PR changelog comment
         if: steps.get-file-changes.outputs.pages_any_changed == 'true'
         uses: actions/github-script@v6.4.1
@@ -135,4 +138,12 @@ jobs:
         with:
           name: docs
           path: changelog
+
+  docs-lint-for-pr:
+    needs: save-changelog-comment
+    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-lint.yml@dev
+    with:
+      files: ${{ needs.save-changelog-comment.outputs.files }}
+      vale-fail-on-error: true
+      reporter: github-pr-check
 
