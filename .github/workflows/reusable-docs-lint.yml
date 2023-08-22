@@ -42,16 +42,17 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ inputs.files != '[]' }}
     steps:
-      - uses: actions/checkout@v3
+      # - uses: actions/checkout@v3
 
       - name: download rules
         uses: actions/checkout@v3
         with:
           repository: recrwplay/antora-build-verify
           ref: dev
+          path: vale-rules
           sparse-checkout: |
             .vale.ini
-            .github/styles
+            .github/styles/
           sparse-checkout-cone-mode: false
 
       - name: list files
