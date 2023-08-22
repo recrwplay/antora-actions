@@ -26,3 +26,7 @@ jobs:
     name: Check links
     needs: docs-build
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-links.yml@dev
+
+  docs-lint:
+    name: Lint docs
+    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-lint.yml@dev
