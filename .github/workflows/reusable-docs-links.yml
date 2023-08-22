@@ -45,16 +45,13 @@ jobs:
         name: docs
         path: build
 
-    - name: Display structure of downloaded files
-      run: ls -R
-
-    - name: Install link checker
-      run: npm install github:recrwplay/link-checker#v0.2.0
-
     - name: Use Node.js 16
       uses: actions/setup-node@v3
       with:
         node-version: '16'
+
+    - name: Install link checker
+      run: npm install github:recrwplay/link-checker#v0.2.0
 
     - name: Run package script
       run: |
@@ -76,3 +73,7 @@ jobs:
       with:
         name: linklog
         path: link-log.txt
+
+    # if errors, raise an issue in the repo and exit 1 to fail the workflow
+    # tbc...
+    # create an action. action needs authed token. attach log to issue. extract errors as issue text?
