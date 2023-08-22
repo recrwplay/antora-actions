@@ -25,7 +25,7 @@ jobs:
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-pr-changes.yml@dev
 
   docs-lint-for-pr:
-    needs: docs-pr-deploy-links
+    needs: docs-deploy-links-for-pr
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-lint.yml@dev
     with:
       files: ${{ needs.docs-deploy-links-for-pr.outputs.asciidoc-files }}
