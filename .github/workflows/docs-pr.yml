@@ -24,7 +24,7 @@ jobs:
     needs: docs-build-for-pr
     runs-on: ubuntu-latest
     outputs:
-      files: ${{ steps.get-file-changes.outputs.all_changed_files }}
+      files: ${{ steps.get-file-changes.outputs.asciidoc_all_changed_files }}
     steps:
       - name: Check out PR branch
         uses: actions/checkout@v3
@@ -49,6 +49,8 @@ jobs:
           files_yaml: |
             pages:
               - modules/**/pages/**/*.adoc
+            asciidoc:
+              - modules/**/*.adoc
 
       - name: Get page list for PR changelog
         id: get-page-list
