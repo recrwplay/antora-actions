@@ -50,27 +50,29 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ inputs.files != '[]' }}
     steps:
+
+      # Checkout the repo
       - uses: actions/checkout@v3
 
+      # Fetch the vale config and styles
+      # Checkout to ./lint
       - name: download rules
         uses: actions/checkout@v3
         with:
           repository: recrwplay/antora-build-verify
           ref: dev
-          path: vale-rules
+          path: lint
           sparse-checkout: |
             vale
           sparse-checkout-cone-mode: false
 
-      - name: list files
-        run: ls -a -R
-
+      # Run Vale
       - uses: errata-ai/vale-action@reviewdog
         with:
           files: ${{ inputs.files }}
           reporter: ${{ inputs.reporter }}
           fail_on_error: ${{ inputs.vale-fail-on-error }}
           separator: ${{ inputs.separator }}
-          vale_flags: "--config=./vale-rules/vale/.vale.ini"
+          vale_flags: "--config=./lint/vale/.vale.ini"
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
