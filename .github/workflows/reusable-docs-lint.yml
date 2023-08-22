@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ inputs.files != '[]' }}
     steps:
-      # - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       - name: download rules
         uses: actions/checkout@v3
@@ -51,7 +51,7 @@ jobs:
           ref: dev
           path: vale-rules
           sparse-checkout: |
-            .github
+            styles
 
       - name: list files
         run: ls -R
