@@ -12,6 +12,10 @@ on:
         description: 'The files to lint'
         default: '.'
         type: string
+      vale-config-file:
+        description: 'The vale ini file to use'
+        default: './lint/vale/.vale.ini'
+        type: string
       vale-fail-on-error:
         description: 'Report vale errors as a failure'
         default: false
@@ -29,6 +33,10 @@ on:
       files:
         description: 'The files to lint'
         default: '.'
+        type: string
+      vale-config-file:
+        description: 'The vale ini file to use'
+        default: './lint/vale/.vale.ini'
         type: string
       vale-fail-on-error:
         description: 'Report vale errors as a failure'
@@ -73,6 +81,6 @@ jobs:
           reporter: ${{ inputs.reporter }}
           fail_on_error: ${{ inputs.vale-fail-on-error }}
           separator: ${{ inputs.separator }}
-          vale_flags: "--config=./lint/vale/.vale.ini"
+          vale_flags: "--config=${{ inputs.vale-config-file }}"
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
