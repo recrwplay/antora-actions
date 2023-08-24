@@ -1,7 +1,25 @@
 # Introduction
 
-Introduction
+You need to know some stuff first.
 
-link:https://neo4j.com/docs/getting-started/data-modeling/[Data modeling]
-link:https://neo4j.com/docs/aura[Aura]
-link:https://neo4j.com/docs/aura/auradb[AuraDB]
+[NOTE]
+====
+This page has been updated
+====
+
+* link:https://neo4j.com/docs/getting-started/data-modeling/[Data modeling]
+* link:https://neo4j.com/docs/aura[Aura]
+* link:https://neo4j.com/docs/aura/auradb[AuraDB]
+
+## Linting mistakes
+
+Customers like Neo4j.
+
+The following code contains a valid usage of `neo4j` in lower case.
+
+[source, cypher]
+----
+MATCH (neo4j) RETURN neo4j
+----
+
+
