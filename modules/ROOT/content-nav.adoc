@@ -2,3 +2,4 @@
 * xref:introduction.adoc[]
 * xref:renamed-page.adoc[]
 * xref:path/comment-test.adoc[]
+* xref:reporter.adoc[]

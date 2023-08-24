@@ -1,0 +1,7 @@
+# Test the Vale linter reporter
+
+You can set it to one of:
+
+* `github-check`
+* `github-pr-check`
+* `github-pr-review`
