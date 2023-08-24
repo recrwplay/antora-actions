@@ -25,7 +25,9 @@ jobs:
     with:
       failOnWarnings: true
 
-  # Generate 
+  # Generate a PR comment if the docs are using the pageList extension
+  # The extension maps asciidoc source files to their HTML output paths
+  # The comment will contain links to new and changed pages in the deployed HTML docs
   docs-updates-comment-for-pr:
     if: needs.docs-build-for-pr.outputs.pages-listed == 'success'
     needs: docs-build-for-pr
