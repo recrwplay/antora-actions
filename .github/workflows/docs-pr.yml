@@ -27,7 +27,7 @@ jobs:
 
   # Generate 
   docs-updates-comment-for-pr:
-    if: ${{ needs.docs-build-for-pr.outputs.pages-listed == 'success' }}
+    if: needs.docs-build-for-pr.outputs.pages-listed == 'success'
     needs: docs-build-for-pr
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-pr-changes.yml@dev
 
@@ -35,7 +35,7 @@ jobs:
   # You can specify your own vale config file if you want to override or replace the default Neo4j rules
   docs-lint-for-pr:
     needs: docs-updates-comment-for-pr
-    if: needs.docs-updates-comment-for-pr.outputs.asciidoc-files == ''
+    if: needs.docs-updates-comment-for-pr.outputs.asciidoc-changed == 'true'
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-lint.yml@dev
     with:
       files: ${{ needs.docs-updates-comment-for-pr.outputs.asciidoc-files }}
