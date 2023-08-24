@@ -8,12 +8,15 @@ name: "Documentation Changelist"
 on:
   workflow_call:
     outputs:
-      asciidoc-files: ${{ steps.get-file-changes.outputs.asciidoc_all_changed_files }}
-      asciidoc-changed: ${{ steps.get-file-changes.outputs.asciidoc_any_changed }}
+      asciidoc-files:
+        description: 'A list of asciidoc files changed in this PR'
+        value: ${{ jobs.save-changelog-comment.outputs.asciidoc-files }}
 
 jobs:
   save-changelog-comment:
     runs-on: ubuntu-latest
+    outputs:
+      asciidoc-files: ${{ steps.get-file-changes.outputs.asciidoc_all_changed_files }}
 
     steps:
       - name: Get deploy URL
