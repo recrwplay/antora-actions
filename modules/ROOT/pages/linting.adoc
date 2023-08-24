@@ -1,4 +1,4 @@
-# A renamed file
+# A page that contains linting examples
 :product: Neo4j
 :version: 5
 
