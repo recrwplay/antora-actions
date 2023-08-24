@@ -68,7 +68,7 @@ jobs:
       files: ${{ needs.docs-changes-pr.outputs.asciidoc-files }}
       vale-fail-on-error: true
       # vale-config-file: .vale.ini
-      reporter: github-pr-check
+      # reporter: github-pr-check
       separator: ','
 
 
