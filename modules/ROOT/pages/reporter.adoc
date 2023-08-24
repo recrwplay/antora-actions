@@ -5,3 +5,7 @@ You can set it to one of:
 * `github-check`
 * `github-pr-check`
 * `github-pr-review`
+
+Now I just need to trigger a suggestion.
+
+If I use lower case for neo4j, it should suggest Neo4j.
