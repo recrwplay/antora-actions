@@ -61,7 +61,7 @@ jobs:
   # Use vale to verify the changes against the style guide
   # You can specify your own vale config file if you want to override or replace the default Neo4j rules
   docs-lint-pr:
-    needs: docs-updates-comment-pr
+    needs: docs-changes-pr
     if: needs.docs-changes-pr.outputs.asciidoc-files != ''
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-lint.yml@dev
     with:
