@@ -35,7 +35,7 @@ jobs:
   # You can specify your own vale config file if you want to override or replace the default Neo4j rules
   docs-lint-for-pr:
     needs: docs-updates-comment-for-pr
-    if: needs.docs-updates-comment-for-pr.outputs.asciidoc-changed == 'true'
+    if: needs.docs-updates-comment-for-pr.outputs.asciidoc-files != ''
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-lint.yml@dev
     with:
       files: ${{ needs.docs-updates-comment-for-pr.outputs.asciidoc-files }}
