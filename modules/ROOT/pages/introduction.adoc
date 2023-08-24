@@ -1,6 +1,6 @@
 # Introduction
 
-This page is an introduction.
+You need to know some stuff first.
 
 [NOTE]
 ====
@@ -13,7 +13,7 @@ This page has been updated
 
 ## Linting mistakes
 
-I like neo4j.
+Customers like Neo4j.
 
 The following code contains a valid usage of `neo4j` in lower case.
 
