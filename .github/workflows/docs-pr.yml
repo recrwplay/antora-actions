@@ -1,5 +1,5 @@
-# This is an example of the docs-pr.yml workflow available from the recrwplay org
-name: "Verify PR"
+
+name: "Verify docs PR"
 
 on:
   pull_request:
@@ -8,6 +8,7 @@ on:
 
 jobs:
 
+  #  Generate HTML
   docs-build-for-pr:
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-build.yml@dev
     with:
@@ -15,21 +16,31 @@ jobs:
       retain-artifacts: 14
       pageList: true
 
+  # Parse the json log output from the HTML build, and output warnings and errors as annotations
+  # Optionally, fail the build if there are warnings or errors
+  # By default, the job fails if there are errors, passes if there are warnings only.
   docs-verify-for-pr:
     needs: docs-build-for-pr
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-verify.yml@dev
+    with:
+      failOnWarnings: true
 
-  docs-deploy-links-for-pr:
+  # Generate 
+  docs-updates-comment-for-pr:
     if: ${{ needs.docs-build-for-pr.outputs.pages-listed == 'success' }}
     needs: docs-build-for-pr
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-pr-changes.yml@dev
 
+  # Use vale to verify the changes against the style guide
+  # You can specify your own vale config file if you want to override or replace the default Neo4j rules
   docs-lint-for-pr:
-    needs: docs-deploy-links-for-pr
+    needs: docs-updates-comment-for-pr
+    if: ${{ needs.docs-updates-comment-for-pr.outputs.asciidoc-changed == 'true' }}
     uses: recrwplay/actions-demo/.github/workflows/reusable-docs-lint.yml@dev
     with:
-      files: ${{ needs.docs-deploy-links-for-pr.outputs.asciidoc-files }}
+      files: ${{ needs.docs-updates-comment-for-pr.outputs.asciidoc-files }}
       vale-fail-on-error: true
+      # vale-config-file: .vale.ini
       reporter: github-pr-check
       separator: ','
 
