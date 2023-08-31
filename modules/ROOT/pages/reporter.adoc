@@ -7,3 +7,5 @@ You can set it to one of:
 * `github-check`
 * `github-pr-check`
 * `github-pr-review`
+
+This page also contains mistakes. This sentence should be on a new line.
