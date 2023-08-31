@@ -16,6 +16,10 @@ on:
         description: 'The vale ini file to use'
         default: './lint/vale/.vale.ini'
         type: string
+      use-default-rules:
+        description: 'Use default rules'
+        default: true
+        type: boolean
       vale-fail-on-error:
         description: 'Report vale errors as a failure'
         default: false
@@ -38,6 +42,10 @@ on:
         description: 'The vale ini file to use'
         default: './lint/vale/.vale.ini'
         type: string
+      use-default-rules:
+        description: 'Use default rules'
+        default: true
+        type: boolean
       vale-fail-on-error:
         description: 'Report vale errors as a failure'
         default: false
@@ -64,7 +72,8 @@ jobs:
 
       # Fetch the vale config and styles
       # Checkout to ./lint
-      - name: download rules
+      - name: download default rules
+        if: ${{ inputs.use-default-rules == 'true' }}
         uses: actions/checkout@v3
         with:
           repository: recrwplay/antora-build-verify
