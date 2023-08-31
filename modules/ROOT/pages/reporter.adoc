@@ -8,4 +8,4 @@ You can set it to one of:
 * `github-pr-check`
 * `github-pr-review`
 
-This page also contains mistakes. This sentence should be on a new line.
+Neo4j style says you should start a new sentence on a new line. This sentence should be on a new line.
