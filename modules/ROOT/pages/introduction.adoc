@@ -23,3 +23,17 @@ MATCH (neo4j) RETURN neo4j
 ----
 
 
+This is the first sentence.
+This is the second sentence.
+This is the third sentence.
+This sentence has whitespace after it.
+
+This paragraph has `a sentence in inline code with a fulltsto.` and then continues.
+
+This paragraph has a sentence with a period. and then continues.
+
+This is an attempt at simplicity.
+
+You can utilize the function.
+
+You can utilise the function.
