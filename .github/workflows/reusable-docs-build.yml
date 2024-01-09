@@ -8,15 +8,22 @@ on:
         type: string
         default: 'build-verify'
       deploy-id:
-        description: 'The PR number if workflow called by a PR'
-        required: true
-        type: string
-        default: 'na'
-      retain-artifacts:
-        description: 'The number of days to retain artifacts'
+        description: 'The Deploy ID or PR number if workflow called by a PR'
         required: true
         type: number
+        default: 0
+      retain-artifacts:
+        description: 'The number of days to retain artifacts'
+        type: number
         default: 7
+      pageList:
+        description: 'Upload page list artifact'
+        type: boolean
+        default: false
+    outputs:
+        pages-listed:
+          description: "Page list artifact was uploaded"
+          value: ${{ jobs.build-docs.outputs.pages-listed }}
   workflow_dispatch:
     inputs:
       package-script:
@@ -25,20 +32,26 @@ on:
         type: string
         default: 'build-verify'
       deploy-id:
-        description: 'An id if the output is to be deployed'
-        required: true
-        type: string
-        default: 'id-'
-      retain-artifacts:
-        description: 'The number of days to retain artifacts'
+        description: 'A deploy ID'
         required: true
         type: number
+        default: 0
+      retain-artifacts:
+        description: 'The number of days to retain artifacts'
+        type: number
         default: 7
+      pageList:
+        description: 'Upload page list artifact'
+        required: false
+        type: boolean
+        default: false
 
 
 jobs:
   build-docs:
     runs-on: ubuntu-latest
+    outputs:
+      pages-listed: ${{ steps.page-list-artifact.outcome }}
 
     env:
       PACKAGE_SCRIPT: ${{ inputs.package-script }}
@@ -73,4 +86,13 @@ jobs:
       with:
         name: antora-log
         path: build/log
+        retention-days: ${{ inputs.retain-artifacts }}
+
+    - name: Upload Page List artifact
+      id: page-list-artifact
+      if: ${{ inputs.pageList }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: page-list
+        path: build/site/.meta/pageList
         retention-days: ${{ inputs.retain-artifacts }}

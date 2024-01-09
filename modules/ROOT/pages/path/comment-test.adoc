@@ -1,0 +1,3 @@
+# Comment test
+
+This is a new file to test whether the sticky comment is updated.
