@@ -105,3 +105,9 @@ dist
 
 # Antora
 build/
+
+# Exclude external styles
+vale/styles/Google
+
+# IDE
+.vscode
