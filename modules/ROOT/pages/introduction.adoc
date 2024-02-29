@@ -38,4 +38,4 @@ You can utilize the function.
 
 You can utilise the function.
 
-xref:broken.adoc[]
+xref:index.adoc[]
