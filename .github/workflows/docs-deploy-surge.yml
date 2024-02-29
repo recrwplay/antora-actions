@@ -6,6 +6,8 @@
 # This workflow expects the triggering workflow to generate an artifact called "docs"
 # - update the reference to "docs" and "docs.zip" in this workflow if your triggering workflow generates an artifact with a different name
 
+# change to force workflow with no changelog
+
 name: "Deploy docs preview"
 
 on:
@@ -34,19 +36,41 @@ jobs:
                repo: context.repo.repo,
                run_id: ${{ env.RUN_ID }},
             });
-            var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
+
+            var matchArtifactDocs = artifacts.data.artifacts.filter((artifact) => {
               return artifact.name == "docs"
             })[0];
-            var download = await github.rest.actions.downloadArtifact({
+            var downloadDocs = await github.rest.actions.downloadArtifact({
                owner: context.repo.owner,
                repo: context.repo.repo,
-               artifact_id: matchArtifact.id,
+               artifact_id: matchArtifactDocs.id,
                archive_format: 'zip',
             });
             var fs = require('fs');
-            fs.writeFileSync('${{ env.WORKSPACE }}/docs.zip', Buffer.from(download.data));
-      
-      - run: unzip docs.zip
+            fs.writeFileSync('${{ env.WORKSPACE }}/docs.zip', Buffer.from(downloadDocs.data));
+
+            var matchArtifactChangelog = artifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "changelog"
+            })[0];
+            var downloadChangelog = await github.rest.actions.downloadArtifact({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              artifact_id: matchArtifactChangelog.id,
+              archive_format: 'zip',
+            });
+            fs.writeFileSync('${{ env.WORKSPACE }}/changelog.zip', Buffer.from(downloadChangelog.data));
+
+      - id: unzip-docs
+        run: unzip docs.zip
+
+      - id: get-top-dir
+        run: |
+          root=$(ls -d */index.html | sed -r 's/(.*)\/index\.html/\1/')
+          echo "top-dir=$root" >> $GITHUB_OUTPUT
+
+      - id: unzip-changelog
+        if: ${{ hashFiles('changelog.zip') != '' }}
+        run: unzip changelog.zip
       
       - id: get-deploy-id
         run: |
@@ -63,7 +87,7 @@ jobs:
           deployurl=$ORG-$REPO-$DEPLOYID.surge.sh
           echo "deploy-url=$deployurl" >> $GITHUB_OUTPUT
       
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: lts/*
       
@@ -71,29 +95,30 @@ jobs:
         shell: bash
         env:
           DEPLOY_URL: ${{ steps.get-deploy-url.outputs.deploy-url }}
-          SURGE_TOKEN: "${{ secrets.SURGE_TOKEN }}"
+          SURGE_TOKEN: "${{ secrets.DOCS_SURGE_TOKEN }}"
+          SITE_DIR: ${{ steps.get-top-dir.outputs.top-dir }}
         run: |
           npm install -g surge
-          surge ./site $DEPLOY_URL --token "$SURGE_TOKEN"
+          surge ./$SITE_DIR $DEPLOY_URL --token "$SURGE_TOKEN"
 
       # If the PR artifacts include a changelog file, add it to the PR as a comment
       # The changelog contains links to new and changed files in the deployed docs
       - name: Comment on PR (changelog)
         if: ${{ hashFiles('changelog') != '' }}
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@efaaab3fd41a9c3de579aba759d2552635e590fd #v2.8.0
         with:
           number: ${{ steps.get-deploy-id.outputs.deploy-id }}
           recreate: true
           header: docs-pr-changes
           path: changelog
-          GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.DOCS_PR_COMMENT_TOKEN }}
 
       # If there's no changelog, add a generic comment to the PR
       - name: Comment on PR (no changelog)
         if: ${{ hashFiles('changelog') == '' }}
         env:
           DEPLOY_URL: ${{ steps.get-deploy-url.outputs.deploy-url }}
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@efaaab3fd41a9c3de579aba759d2552635e590fd #v2.8.0
         with:
           number: ${{ steps.get-deploy-id.outputs.deploy-id }}
           header: docs-pr-changes
@@ -101,25 +126,4 @@ jobs:
             Looks like you've updated the documentation!
 
             Check out your changes at https://${{ env.DEPLOY_URL }}
-          GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
-
-
-      # These next steps are experimental
-      # They requires an authorised github app
-      # The app key is used to generate a token, which is used to add a check to the PR
-      # It puts the status of this workflow into the PR checks so it is easier to spot when it fails
-      # - uses: tibdex/github-app-token@v1
-      #   id: get-installation-token
-      #   with: 
-      #     app_id: 377941
-      #     private_key: ${{ secrets.CHECKS_APP_TOKEN }}
-
-
-      # - name: Add Check status to PR
-      #   uses: LouisBrunner/checks-action@v1.6.2
-      #   if: always()
-      #   with:
-      #     sha: ${{ github.event.workflow_run.head_sha }}
-      #     token: ${{ steps.get-installation-token.outputs.token }}
-      #     name: Docs deploy
-      #     conclusion: ${{ job.status }}
+          GITHUB_TOKEN: ${{ secrets.DOCS_PR_COMMENT_TOKEN }}
