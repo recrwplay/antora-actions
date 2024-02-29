@@ -91,39 +91,39 @@ jobs:
         with:
           node-version: lts/*
       
-      - name: Deploy docs to surge
-        shell: bash
-        env:
-          DEPLOY_URL: ${{ steps.get-deploy-url.outputs.deploy-url }}
-          SURGE_TOKEN: "${{ secrets.DOCS_SURGE_TOKEN }}"
-          SITE_DIR: ${{ steps.get-top-dir.outputs.top-dir }}
-        run: |
-          npm install -g surge
-          surge ./$SITE_DIR $DEPLOY_URL --token "$SURGE_TOKEN"
+      # - name: Deploy docs to surge
+      #   shell: bash
+      #   env:
+      #     DEPLOY_URL: ${{ steps.get-deploy-url.outputs.deploy-url }}
+      #     SURGE_TOKEN: "${{ secrets.DOCS_SURGE_TOKEN }}"
+      #     SITE_DIR: ${{ steps.get-top-dir.outputs.top-dir }}
+      #   run: |
+      #     npm install -g surge
+      #     surge ./$SITE_DIR $DEPLOY_URL --token "$SURGE_TOKEN"
 
-      # If the PR artifacts include a changelog file, add it to the PR as a comment
-      # The changelog contains links to new and changed files in the deployed docs
-      - name: Comment on PR (changelog)
-        if: ${{ hashFiles('changelog') != '' }}
-        uses: marocchino/sticky-pull-request-comment@efaaab3fd41a9c3de579aba759d2552635e590fd #v2.8.0
-        with:
-          number: ${{ steps.get-deploy-id.outputs.deploy-id }}
-          recreate: true
-          header: docs-pr-changes
-          path: changelog
-          GITHUB_TOKEN: ${{ secrets.DOCS_PR_COMMENT_TOKEN }}
+      # # If the PR artifacts include a changelog file, add it to the PR as a comment
+      # # The changelog contains links to new and changed files in the deployed docs
+      # - name: Comment on PR (changelog)
+      #   if: ${{ hashFiles('changelog') != '' }}
+      #   uses: marocchino/sticky-pull-request-comment@efaaab3fd41a9c3de579aba759d2552635e590fd #v2.8.0
+      #   with:
+      #     number: ${{ steps.get-deploy-id.outputs.deploy-id }}
+      #     recreate: true
+      #     header: docs-pr-changes
+      #     path: changelog
+      #     GITHUB_TOKEN: ${{ secrets.DOCS_PR_COMMENT_TOKEN }}
 
-      # If there's no changelog, add a generic comment to the PR
-      - name: Comment on PR (no changelog)
-        if: ${{ hashFiles('changelog') == '' }}
-        env:
-          DEPLOY_URL: ${{ steps.get-deploy-url.outputs.deploy-url }}
-        uses: marocchino/sticky-pull-request-comment@efaaab3fd41a9c3de579aba759d2552635e590fd #v2.8.0
-        with:
-          number: ${{ steps.get-deploy-id.outputs.deploy-id }}
-          header: docs-pr-changes
-          message: |
-            Looks like you've updated the documentation!
+      # # If there's no changelog, add a generic comment to the PR
+      # - name: Comment on PR (no changelog)
+      #   if: ${{ hashFiles('changelog') == '' }}
+      #   env:
+      #     DEPLOY_URL: ${{ steps.get-deploy-url.outputs.deploy-url }}
+      #   uses: marocchino/sticky-pull-request-comment@efaaab3fd41a9c3de579aba759d2552635e590fd #v2.8.0
+      #   with:
+      #     number: ${{ steps.get-deploy-id.outputs.deploy-id }}
+      #     header: docs-pr-changes
+      #     message: |
+      #       Looks like you've updated the documentation!
 
-            Check out your changes at https://${{ env.DEPLOY_URL }}
-          GITHUB_TOKEN: ${{ secrets.DOCS_PR_COMMENT_TOKEN }}
+      #       Check out your changes at https://${{ env.DEPLOY_URL }}
+      #     GITHUB_TOKEN: ${{ secrets.DOCS_PR_COMMENT_TOKEN }}
