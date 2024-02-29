@@ -4,6 +4,7 @@ name: "Documentation Teardown"
 on:
   pull_request_target:
     branches:
+      - main
       - dev
     types:
       - closed
@@ -29,14 +30,14 @@ jobs:
       - name: Teardown documentation
         shell: bash
         env:
-          SURGE_TOKEN: "${{ secrets.SURGE_TOKEN }}"
+          SURGE_TOKEN: "${{ secrets.DOCS_SURGE_TOKEN }}"
           DEPLOY_URL: ${{ steps.get-deploy-url.outputs.deploy-url }}
         run: |
           npm install -g surge
           surge teardown $DEPLOY_URL --token "$SURGE_TOKEN"
 
       - name: Comment on PR
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@efaaab3fd41a9c3de579aba759d2552635e590fd # v2.8.0
         with:
           number: ${{ github.event.pull_request.number }}
           header: docs-pr-changes
@@ -44,5 +45,5 @@ jobs:
             Thanks for the documentation updates.
 
             The preview documentation has now been torn down - reopening this PR will republish it.
-          GITHUB_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.DOCS_PR_COMMENT_TOKEN }}
       
