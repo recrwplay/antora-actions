@@ -1,5 +1,5 @@
 # Antora and github actions tests
-:no-attribute: 'an attribute'
+:attribute: 'attribute text'
 Just testing workflows, actions, annotations.
 
 ## Content to generate xrefs and warnings
@@ -7,3 +7,6 @@ Just testing workflows, actions, annotations.
 include::partial$include-target.adoc[]
 
 Lorem ipsum.
+
+
+This {attribute} exists.
