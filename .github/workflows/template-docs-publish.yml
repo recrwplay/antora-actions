@@ -3,9 +3,9 @@ name: "Publish HTML"
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-    - dev
+  # push:
+  #   branches:
+  #   - dev
 
 jobs:
 
@@ -20,14 +20,14 @@ jobs:
 
   docs-build-for-publish:
     needs: docs-get-branch
-    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-build.yml@main
+    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-build.yml@dev
     with:
       deploy-id: ${{ needs.docs-get-branch.outputs.branch }}
       retain-artifacts: 28
 
   docs-verify-for-publish:
     needs: docs-build-for-publish
-    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-verify.yml@main
+    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-verify.yml@dev
 
   docs-publish-dev:
     needs: docs-verify-for-publish

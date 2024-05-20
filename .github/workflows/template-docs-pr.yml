@@ -9,14 +9,14 @@ on:
 jobs:
 
   docs-build-for-pr:
-    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-build.yml@main
+    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-build.yml@actions-env-update
     with:
       deploy-id: ${{ github.event.number }}
       retain-artifacts: 14
 
   docs-verify-for-pr:
     needs: docs-build-for-pr
-    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-verify.yml@main
+    uses: recrwplay/actions-demo/.github/workflows/reusable-docs-verify.yml@actions-env-update
     
     
   set-outputs:
