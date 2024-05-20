@@ -1,15 +1,11 @@
-# Antora and github actions tests
-:no-attribute: 'an attribute'
+= Antora and github actions tests
+:an-attribute: 'an attribute'
 Just testing workflows, actions, annotations.
 
-## Content to generate xrefs and warnings
+== Content to generate xrefs and warnings
 
 include::partial$include-target.adoc[]
 
-I have {no-attribute} that I can use here.
+I have {an-attribute} that I can use here.
 
-This sentence has been added to see if the pr comment is repeated or updated.
-
-This branch contains a change to test inputs when building from a PR.
-
-// yes
+// fixed it
