@@ -1,0 +1,13 @@
+# A page that contains linting examples
+:product: Neo4j
+:version: 5
+
+Lorem ipsum.
+
+You need to upgrade to Neo4j version 5.
+
+You are using Neo4j v4.4
+
+You are using {product} version {version}
+
+Why isn't the attribute parsed?
