@@ -1,0 +1,11 @@
+# Test the Vale linter reporter
+
+This page is about the Vale reporter.
+
+You can set it to one of:
+
+* `github-check`
+* `github-pr-check`
+* `github-pr-review`
+
+Neo4j style says you should start a new sentence on a new line. This sentence should be on a new line.
