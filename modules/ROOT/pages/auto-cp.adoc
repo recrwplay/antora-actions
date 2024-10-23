@@ -1,3 +1,5 @@
 = Auto cherry-pick
 
-THis change is in a branch that will target the auto-cp branch
+THis change is in a branch that will target the auto-cp branch.
+
+Now I am using a PAT and not github_token.
