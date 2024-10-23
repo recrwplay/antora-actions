@@ -11,5 +11,5 @@ Lorem ipsum.
 
 This {attribute} exists.
 
-This content will be merged by using a PR.
+This new content will be merged by using a PR.
 It will then be auto cherry-picked to `main`.`
